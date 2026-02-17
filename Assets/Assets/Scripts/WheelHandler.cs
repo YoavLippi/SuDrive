@@ -6,6 +6,7 @@ public class WheelHandler : MonoBehaviour
     [Header("Parent Setup")]
     [SerializeField] private GameObject parentObj;
     [SerializeField] private Rigidbody2D parentBody;
+    [SerializeField] private CarController parentController;
 
     [Header("Physics")] 
     [SerializeField] [Range(0,1f)] private float gripFactor = 1f;
@@ -15,6 +16,7 @@ public class WheelHandler : MonoBehaviour
         if (parentObj)
         {
             parentBody = parentObj.GetComponent<Rigidbody2D>();
+            parentController = parentObj.GetComponent<CarController>();
         }
     }
 
@@ -59,6 +61,11 @@ public class WheelHandler : MonoBehaviour
         Vector2 accelDir = transform.up;
         
         //We want to accelerate constantly, then the main physics body can clamp the speed based on the throttle input
+        float accelAmount = parentController.CurrentAcceleration;
+        float breakAmount = parentController.CurrentBreakForce;
+        
+        //Dividing by 4 for each wheel
+        parentBody.AddForceAtPosition(accelDir*(accelAmount-breakAmount)/4, parentBody.position, ForceMode2D.Impulse);
 
         #endregion
 

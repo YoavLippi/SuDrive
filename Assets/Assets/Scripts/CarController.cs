@@ -31,7 +31,13 @@ public class CarController : MonoBehaviour
     [SerializeField] private float currentAcceleration = 0;
     [SerializeField] private float currentBreakForce = 0;
     [SerializeField] private bool isBoosting;
-    
+
+    public Vector2 CurrentMoveDir => currentMoveDir;
+
+    public float CurrentAcceleration => currentAcceleration;
+
+    public float CurrentBreakForce => currentBreakForce;
+
     [Header("Debug")]
     [SerializeField] private TMP_Text debugText;
 
