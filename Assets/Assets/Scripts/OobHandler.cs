@@ -17,6 +17,9 @@ public class OobHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        throw new NotImplementedException();
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.GetComponent<PlayerController>().DoDeath();
+        }
     }
 }

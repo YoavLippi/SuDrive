@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 9110363996796376727}
   - component: {fileID: 2158134786307599745}
   - component: {fileID: 7619416482190873509}
+  - component: {fileID: 5065919790299985396}
   m_Layer: 0
   m_Name: Player Car
   m_TagString: Player
@@ -501,18 +502,18 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
@@ -525,18 +526,18 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
@@ -572,6 +573,18 @@ MonoBehaviour:
   currentBreakForce: 0
   isBoosting: 0
   debugText: {fileID: 7834899623771239391}
+--- !u!114 &5065919790299985396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3434694513921635593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a7a83ad327ded4d903fd0be48ced06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
 --- !u!1 &4585628171727567291
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WheelHandler
   parentObj: {fileID: 0}
   parentBody: {fileID: 0}
+  parentController: {fileID: 0}
   gripFactor: 1
 --- !u!1 &5164833111972886461
 GameObject:
@@ -667,6 +681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WheelHandler
   parentObj: {fileID: 0}
   parentBody: {fileID: 0}
+  parentController: {fileID: 0}
   gripFactor: 1
 --- !u!1 &5774779804898810428
 GameObject:
@@ -806,6 +821,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   parentObj: {fileID: 0}
   parentBody: {fileID: 0}
+  parentController: {fileID: 0}
   gripFactor: 1
 --- !u!1 &6994837388182229780
 GameObject:
@@ -1047,6 +1063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WheelHandler
   parentObj: {fileID: 0}
   parentBody: {fileID: 0}
+  parentController: {fileID: 0}
   gripFactor: 1
 --- !u!1 &9139153540152794601
 GameObject:

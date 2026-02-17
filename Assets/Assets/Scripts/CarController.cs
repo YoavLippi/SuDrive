@@ -32,14 +32,31 @@ public class CarController : MonoBehaviour
     [SerializeField] private float currentBreakForce = 0;
     [SerializeField] private bool isBoosting;
 
+    [Header("State Control")] 
+    [SerializeField] private CarStates currentState;
+    
     public Vector2 CurrentMoveDir => currentMoveDir;
 
     public float CurrentAcceleration => currentAcceleration;
 
     public float CurrentBreakForce => currentBreakForce;
 
+    public CarStates CurrentState
+    {
+        get => currentState;
+        set => currentState = value;
+    }
+
     [Header("Debug")]
     [SerializeField] private TMP_Text debugText;
+
+    [Serializable]
+    public enum CarStates
+    {
+        Actionable,
+        Stunned,
+        Dead
+    }
 
     private void OnEnable()
     {
@@ -92,30 +109,41 @@ public class CarController : MonoBehaviour
     private void OnDrive()
     {
         if (!enabled) return;
-        
-        float rawInputVal = _playerInput.actions.FindAction("Drive").ReadValue<float>();
-        //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
-        currentAcceleration = accelCurve.Evaluate(rawInputVal);
+
+        if (currentState == CarStates.Actionable)
+        {
+            float rawInputVal = _playerInput.actions.FindAction("Drive").ReadValue<float>();
+            //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
+            currentAcceleration = accelCurve.Evaluate(rawInputVal);   
+        }
     }
 
     private void OnReverse()
     {
         if (!enabled) return;
-        float rawInputVal = _playerInput.actions.FindAction("Reverse").ReadValue<float>();
-        //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
-        currentBreakForce = reverseCurve.Evaluate(rawInputVal);
+        if (currentState == CarStates.Actionable)
+        {
+            float rawInputVal = _playerInput.actions.FindAction("Reverse").ReadValue<float>();
+            //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
+            currentBreakForce = reverseCurve.Evaluate(rawInputVal);   
+        }
     }
 
     private void OnMove()
     {
         if (!enabled) return;
-        currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();
+        if (currentState == CarStates.Actionable)
+        {
+            currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();   
+        }
     }
 
     private void OnBoost()
     {
         if (!enabled) return;
-        isBoosting = (_playerInput.actions.FindAction("Boost").ReadValue<float>() == 1);
-        if (debugText) debugText.text = $"Boost is currently {isBoosting}";
+        if (currentState == CarStates.Actionable)
+        {
+            isBoosting = (_playerInput.actions.FindAction("Boost").ReadValue<int>() == 1);
+        }
     }
 }
