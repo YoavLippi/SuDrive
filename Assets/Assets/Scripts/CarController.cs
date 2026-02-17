@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,10 +12,11 @@ public class CarController : MonoBehaviour
     [Header("Setup")]
     [SerializeField] private PlayerInput _playerInput;
     //Serialising separately instead of as an array because it's easier than indexing later
-    [SerializeField] private GameObject frWheel;
-    [SerializeField] private GameObject flWheel;
-    [SerializeField] private GameObject brWheel;
-    [SerializeField] private GameObject blWheel;
+    [SerializeField] private WheelHandler frWheel;
+    [SerializeField] private WheelHandler flWheel;
+    [SerializeField] private WheelHandler brWheel;
+    [SerializeField] private WheelHandler blWheel;
+    private List<WheelHandler> allWheels;
 
     [SerializeField] private Rigidbody2D carBody;
 
@@ -46,7 +48,7 @@ public class CarController : MonoBehaviour
     void Start()
     {
         carBody = GetComponent<Rigidbody2D>();
-        debugText = GameObject.Find("DebugText").GetComponent<TMP_Text>();
+        allWheels = new List<WheelHandler> { frWheel, brWheel, blWheel, flWheel };
     }
 
     // Update is called once per frame
@@ -61,8 +63,8 @@ public class CarController : MonoBehaviour
         
         //steering control
         float steerAngle = steeringCurve.Evaluate(Mathf.Abs(currentMoveDir.x)) * (currentMoveDir.x <=0 ? 1 : -1);
-        flWheel.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
-        frWheel.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
+        flWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
+        frWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
 
         #endregion
 
@@ -84,6 +86,7 @@ public class CarController : MonoBehaviour
     private void OnDrive()
     {
         if (!enabled) return;
+        
         float rawInputVal = _playerInput.actions.FindAction("Drive").ReadValue<float>();
         //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
         currentAcceleration = accelCurve.Evaluate(rawInputVal);
