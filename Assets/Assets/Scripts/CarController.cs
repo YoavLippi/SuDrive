@@ -25,6 +25,9 @@ public class CarController : MonoBehaviour
     [SerializeField] private AnimationCurve reverseCurve;
     //Not sure if it will be necessary but just in case
     [SerializeField] private AnimationCurve steeringCurve;
+    [SerializeField] private float rubberBandAmount;
+    [SerializeField] private float softVelocityCap;
+    [SerializeField] private float hardVelocityCap;
     
     [Header("Listeners")]
     [SerializeField] private Vector2 currentMoveDir = Vector2.zero;
@@ -58,10 +61,10 @@ public class CarController : MonoBehaviour
         Dead
     }
 
-    private void OnEnable()
+    /*private void OnEnable()
     {
         _playerInput.actions.Enable();
-    }
+    }*/
 
     private void OnDisable()
     {
@@ -88,6 +91,12 @@ public class CarController : MonoBehaviour
         float steerAngle = steeringCurve.Evaluate(Mathf.Abs(currentMoveDir.x)) * (currentMoveDir.x <=0 ? 1 : -1);
         flWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
         frWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
+        
+        //RubberBanding
+        /*if (currentState == CarStates.Actionable)
+        {
+            DoRubberBanding();
+        }*/
 
         #endregion
 
@@ -96,6 +105,22 @@ public class CarController : MonoBehaviour
         printDebug();
 
         #endregion
+    }
+
+    private void DoRubberBanding()
+    {
+        //getting current linear velocity
+        float currentSpeed = carBody.linearVelocity.magnitude;
+
+        //Finding the capped velocity in the direction of movement
+        Vector2 desiredVel = carBody.linearVelocity.normalized * Mathf.Min(currentSpeed, softVelocityCap);
+
+        //Getting the difference between the desired velocity and the current one
+        Vector2 velocityDiff = desiredVel - carBody.linearVelocity;
+
+        //Getting the adjustment needed
+        Vector2 velocityAdj = velocityDiff * rubberBandAmount;
+        carBody.linearVelocity += velocityAdj;
     }
 
     private void printDebug()

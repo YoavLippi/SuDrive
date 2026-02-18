@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 2158134786307599745}
   - component: {fileID: 7619416482190873509}
   - component: {fileID: 5065919790299985396}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player Car
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -419,7 +419,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 3, y: 5}
   m_EdgeRadius: 0
 --- !u!50 &9110363996796376727
 Rigidbody2D:
@@ -473,7 +473,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
@@ -568,10 +568,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  rubberBandAmount: 0.5
+  softVelocityCap: 50
+  hardVelocityCap: 50
   currentMoveDir: {x: 0, y: 0}
   currentAcceleration: 0
   currentBreakForce: 0
   isBoosting: 0
+  currentState: 0
   debugText: {fileID: 7834899623771239391}
 --- !u!114 &5065919790299985396
 MonoBehaviour:
@@ -585,6 +589,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a7a83ad327ded4d903fd0be48ced06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  _playerInput: {fileID: 0}
+  _carController: {fileID: 0}
 --- !u!1 &4585628171727567291
 GameObject:
   m_ObjectHideFlags: 0
