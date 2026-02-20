@@ -11,7 +11,7 @@
                     "type": "Value",
                     "id": "351f2ccd-1f9f-44bf-9bec-d62ac5c5f408",
                     "expectedControlType": "Vector2",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -26,12 +26,12 @@
                 },
                 {
                     "name": "Boost",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "27c5f898-bc57-4ee1-8800-db469aca5fe3",
-                    "expectedControlType": "",
+                    "expectedControlType": "Digital",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Jump",
@@ -44,21 +44,21 @@
                 },
                 {
                     "name": "Drive",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "f8776858-2c7e-4d4d-af0e-341188b6fb4e",
-                    "expectedControlType": "",
+                    "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Reverse",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "a2ff1d70-efb5-4449-89c5-94c8fbace0d8",
-                    "expectedControlType": "",
+                    "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Drift",
