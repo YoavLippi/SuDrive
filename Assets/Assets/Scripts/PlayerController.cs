@@ -22,6 +22,11 @@ public class PlayerController : MonoBehaviour
     public void DoDeath()
     {
         //TODO: play a death animation
+        
+        //Disabling and re-enabling the input should clear all of the inputs
+        _playerInput.actions.Disable();
+        _playerInput.actions.Enable();
+        
         _carController.CurrentState = CarController.CarStates.Dead;
     }
 }

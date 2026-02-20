@@ -27,9 +27,11 @@ public class MetaController : MonoBehaviour
     private void OnPlayerJoined(PlayerInput playerInput)
     {
         joinedPlayers.Add(playerInput.gameObject);
+        Debug.Log($"User number {playerInput.playerIndex} joined");
+        playerInput.gameObject.transform.position = new Vector3(0, 10, 0);
         DontDestroyOnLoad(playerInput);
         Debug.Log($"New device added: {playerInput.GetDevice<InputDevice>()}");
-        playerInput.GetComponent<CarController>().CurrentState = CarController.CarStates.Dead;
+        //playerInput.GetComponent<CarController>().CurrentState = CarController.CarStates.Dead;
     }
 
     private void OnPlayerLeft(PlayerInput playerInput)

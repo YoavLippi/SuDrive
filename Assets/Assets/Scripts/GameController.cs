@@ -69,6 +69,7 @@ public class GameController : MonoBehaviour
                 if (trackedPlayer.playerObj == playerObjArr[i])
                 {
                     foundFlag = true;
+                    trackedPlayer.playerObj.GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
                 }
             }
             if (foundFlag) break;
@@ -80,6 +81,14 @@ public class GameController : MonoBehaviour
             temp.isDead = false;
             temp.score = 0;
             playersArr.Add(temp);
+        }
+        
+        //starting round
+        //TODO: Countdown
+        //TODO: Spawn locations
+        foreach (var player in playersArr)
+        {
+            player.playerObj.transform.position = new Vector3(0, 0, 0);
         }
     }
     

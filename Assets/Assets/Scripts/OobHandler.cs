@@ -19,7 +19,8 @@ public class OobHandler : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.GetComponent<PlayerController>().DoDeath();
+            Debug.Log(other.gameObject);
+            other.transform.parent.GetComponent<PlayerController>().DoDeath();
         }
     }
 }

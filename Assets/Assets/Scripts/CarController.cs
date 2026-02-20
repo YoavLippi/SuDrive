@@ -25,6 +25,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private AnimationCurve reverseCurve;
     //Not sure if it will be necessary but just in case
     [SerializeField] private AnimationCurve steeringCurve;
+    [SerializeField] private AnimationCurve softVelocityCurve;
     [SerializeField] private float rubberBandAmount;
     [SerializeField] private float softVelocityCap;
     [SerializeField] private float hardVelocityCap;
@@ -93,10 +94,8 @@ public class CarController : MonoBehaviour
         frWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
         
         //RubberBanding
-        /*if (currentState == CarStates.Actionable)
-        {
-            DoRubberBanding();
-        }*/
+        DoHardVelocityClamp();
+        DoRubberBanding();
 
         #endregion
 
@@ -107,8 +106,26 @@ public class CarController : MonoBehaviour
         #endregion
     }
 
+    private void DoHardVelocityClamp()
+    {
+        //getting current linear velocity
+        float currentSpeed = carBody.linearVelocity.magnitude;
+
+        if (currentSpeed > hardVelocityCap)
+        {
+            //Finding the capped velocity in the direction of movement
+            Vector2 desiredVel = carBody.linearVelocity.normalized * hardVelocityCap;
+
+            //Getting the difference between the desired velocity and the current one
+            Vector2 velocityDiff = desiredVel - carBody.linearVelocity;
+        
+            carBody.linearVelocity += velocityDiff;   
+        }
+    }
+
     private void DoRubberBanding()
     {
+        //if (currentState == CarStates.Dead) return;
         //getting current linear velocity
         float currentSpeed = carBody.linearVelocity.magnitude;
 
@@ -139,7 +156,8 @@ public class CarController : MonoBehaviour
         {
             float rawInputVal = _playerInput.actions.FindAction("Drive").ReadValue<float>();
             //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
-            currentAcceleration = accelCurve.Evaluate(rawInputVal);   
+            currentAcceleration = accelCurve.Evaluate(rawInputVal);
+            softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
         }
     }
 
@@ -151,6 +169,7 @@ public class CarController : MonoBehaviour
             float rawInputVal = _playerInput.actions.FindAction("Reverse").ReadValue<float>();
             //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
             currentBreakForce = reverseCurve.Evaluate(rawInputVal);   
+            softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
         }
     }
 

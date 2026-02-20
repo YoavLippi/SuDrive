@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 134303403}
   - component: {fileID: 134303402}
   - component: {fileID: 134303404}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -494,7 +494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MetaController
   _manager: {fileID: 426384287}
-  joinedDevices: []
+  joinedPlayers: []
 --- !u!114 &426384287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,7 +581,7 @@ GameObject:
   - component: {fileID: 586127381}
   - component: {fileID: 586127379}
   - component: {fileID: 586127382}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -945,7 +945,7 @@ GameObject:
   - component: {fileID: 1038309482}
   - component: {fileID: 1038309481}
   - component: {fileID: 1038309480}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: addon test
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1066,8 +1066,8 @@ Transform:
   m_GameObject: {fileID: 1038309479}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.109, y: -0.146, z: 0}
-  m_LocalScale: {x: 0.124246046, y: 0.15277548, z: 1}
+  m_LocalPosition: {x: 0.144994, y: -0.146, z: 0}
+  m_LocalScale: {x: 0.052258134, y: 0.15277548, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1929596304}
@@ -1393,6 +1393,7 @@ MonoBehaviour:
   playersArr: []
   playerPrefab: {fileID: 3434694513921635593, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
   deadPlayers: 0
+  playerObjArr: []
 --- !u!1 &1929596300
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,7 +1407,7 @@ GameObject:
   - component: {fileID: 1929596302}
   - component: {fileID: 1929596301}
   - component: {fileID: 1929596305}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1588,13 +1589,13 @@ CompositeCollider2D:
         Y: -440400000
   - m_Collider: {fileID: 1038309480}
     m_ColliderPaths:
-    - - X: 376812896
+    - - X: 376813024
         Y: -153286208
-      - X: 103223096
+      - X: 261740592
         Y: -153286208
-      - X: 103223096
+      - X: 261740592
         Y: -489697792
-      - X: 376812896
+      - X: 376813024
         Y: -489697792
   m_CompositePaths:
     m_Paths:
@@ -1615,10 +1616,14 @@ CompositeCollider2D:
       - {x: 41.88447, y: -13.609286}
       - {x: 40.232468, y: -17.91285}
       - {x: 38.13967, y: -22.020155}
-      - {x: 37.68129, y: -22.725859}
-      - {x: 37.681263, y: -15.328621}
-      - {x: 10.3223095, y: -15.3286495}
-      - {x: 10.3222885, y: -42.765224}
+      - {x: 37.6813, y: -22.72584}
+      - {x: 37.681274, y: -15.328621}
+      - {x: 26.174059, y: -15.3286495}
+      - {x: 26.17405, y: -35.395893}
+      - {x: 25.885933, y: -35.629204}
+      - {x: 22.019869, y: -38.139835}
+      - {x: 17.912548, y: -40.2326}
+      - {x: 13.608974, y: -41.88457}
       - {x: 9.156299, y: -43.07765}
       - {x: 4.6033015, y: -43.79876}
       - {x: -0.0001273, y: -44.04}
