@@ -615,17 +615,17 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 60
-      outSlope: 60
+      inSlope: 50
+      outSlope: 50
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 60
-      inSlope: 60
-      outSlope: 60
+      value: 50
+      inSlope: 50
+      outSlope: 50
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -647,7 +647,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 20
+      value: 25
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -657,15 +657,16 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  rubberBandAmount: 0.04
+  rubberBandAmount: 0.15
   softVelocityCap: 50
-  hardVelocityCap: 50
+  hardVelocityCap: 60
   baseTraction: 1
   driftTraction: 0.5
-  currentMoveDir: {x: 0, y: 0}
+  currentMoveDir: 0
   currentAcceleration: 0
   currentBreakForce: 0
   isBoosting: 0
+  currentSpeed: 0
   currentState: 0
   debugText: {fileID: 7834899623771239391}
 --- !u!114 &5065919790299985396

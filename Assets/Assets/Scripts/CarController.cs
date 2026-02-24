@@ -32,16 +32,17 @@ public class CarController : MonoBehaviour
     [SerializeField] [Range(0,1f)] private float baseTraction;
     [SerializeField] [Range(0,1f)] private float driftTraction;
     
-    [Header("Listeners")]
-    [SerializeField] private Vector2 currentMoveDir = Vector2.zero;
+    [Header("Debug")]
+    [SerializeField] private float currentMoveDir = 0;
     [SerializeField] private float currentAcceleration = 0;
     [SerializeField] private float currentBreakForce = 0;
     [SerializeField] private bool isBoosting;
+    [SerializeField] private float currentSpeed;
 
     [Header("State Control")] 
     [SerializeField] private CarStates currentState;
     
-    public Vector2 CurrentMoveDir => currentMoveDir;
+    public float CurrentMoveDir => currentMoveDir;
 
     public float CurrentAcceleration => currentAcceleration;
 
@@ -88,21 +89,20 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        currentSpeed = carBody.linearVelocity.magnitude;
         #region Physics
 
-        if (isBoosting)
+        //RubberBanding
+        DoHardVelocityClamp();
+        if (!isBoosting)
         {
-            
+            DoRubberBanding();
         }
         
         //steering control
-        float steerAngle = steeringCurve.Evaluate(Mathf.Abs(currentMoveDir.x)) * (currentMoveDir.x <=0 ? 1 : -1);
+        float steerAngle = steeringCurve.Evaluate(Mathf.Abs(currentMoveDir)) * (currentMoveDir <=0 ? 1 : -1);
         flWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
         frWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
-        
-        //RubberBanding
-        DoHardVelocityClamp();
-        DoRubberBanding();
 
         #endregion
 
@@ -151,7 +151,7 @@ public class CarController : MonoBehaviour
     {
         if (debugText) debugText.text = $"Accel with val of {currentAcceleration}\n" +
                                         $"Reverse with val of {currentBreakForce}\n" +
-                                        $"Movedir - x:{currentMoveDir.x} y:{currentMoveDir.y}\n" +
+                                        $"Movedir - x:{currentMoveDir}\n" +
                                         $"Boosting? {isBoosting}";
     }
 
@@ -185,7 +185,7 @@ public class CarController : MonoBehaviour
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            currentMoveDir = context.ReadValue<Vector2>();
+            currentMoveDir = context.ReadValue<float>();
             //currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();   
         }
     }
@@ -203,9 +203,12 @@ public class CarController : MonoBehaviour
     {
         //targeting only back wheels
         if (!enabled) return;
-        float newTraction = context.performed ? driftTraction : baseTraction;
+        if (currentState == CarStates.Actionable)
+        {
+            float newTraction = context.performed ? driftTraction : baseTraction;
 
-        allWheels[1].GripFactor = newTraction;
-        allWheels[2].GripFactor = newTraction;
+            allWheels[1].GripFactor = newTraction;
+            allWheels[2].GripFactor = newTraction;
+        }
     }
 }
