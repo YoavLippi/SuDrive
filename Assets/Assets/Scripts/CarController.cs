@@ -29,6 +29,8 @@ public class CarController : MonoBehaviour
     [SerializeField] private float rubberBandAmount;
     [SerializeField] private float softVelocityCap;
     [SerializeField] private float hardVelocityCap;
+    [SerializeField] [Range(0,1f)] private float baseTraction;
+    [SerializeField] [Range(0,1f)] private float driftTraction;
     
     [Header("Listeners")]
     [SerializeField] private Vector2 currentMoveDir = Vector2.zero;
@@ -44,6 +46,10 @@ public class CarController : MonoBehaviour
     public float CurrentAcceleration => currentAcceleration;
 
     public float CurrentBreakForce => currentBreakForce;
+
+    public float BaseTraction => baseTraction;
+
+    public float DriftTraction => driftTraction;
 
     public CarStates CurrentState
     {
@@ -62,10 +68,10 @@ public class CarController : MonoBehaviour
         Dead
     }
 
-    /*private void OnEnable()
+    private void OnEnable()
     {
         _playerInput.actions.Enable();
-    }*/
+    }
 
     private void OnDisable()
     {
@@ -75,6 +81,7 @@ public class CarController : MonoBehaviour
     void Start()
     {
         carBody = GetComponent<Rigidbody2D>();
+        //going clockwise around the car body, starting at the top right
         allWheels = new List<WheelHandler> { frWheel, brWheel, blWheel, flWheel };
     }
 
@@ -148,46 +155,57 @@ public class CarController : MonoBehaviour
                                         $"Boosting? {isBoosting}";
     }
 
-    private void OnDrive()
+    public void OnDrive(InputAction.CallbackContext context)
     {
         if (!enabled) return;
 
         if (currentState == CarStates.Actionable)
         {
-            float rawInputVal = _playerInput.actions.FindAction("Drive").ReadValue<float>();
+            float rawInputVal = context.ReadValue<float>();;
             //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
             currentAcceleration = accelCurve.Evaluate(rawInputVal);
             softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
         }
     }
 
-    private void OnReverse()
+    public void OnReverse(InputAction.CallbackContext context)
     {
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            float rawInputVal = _playerInput.actions.FindAction("Reverse").ReadValue<float>();
+            float rawInputVal = context.ReadValue<float>();
             //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
             currentBreakForce = reverseCurve.Evaluate(rawInputVal);   
             softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
         }
     }
 
-    private void OnMove()
+    public void OnMove(InputAction.CallbackContext context)
     {
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();   
+            currentMoveDir = context.ReadValue<Vector2>();
+            //currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();   
         }
     }
 
-    private void OnBoost()
+    public void OnBoost(InputAction.CallbackContext context)
     {
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            isBoosting = (_playerInput.actions.FindAction("Boost").ReadValue<int>() == 1);
+            isBoosting = context.performed;
         }
+    }
+
+    public void OnDrift(InputAction.CallbackContext context)
+    {
+        //targeting only back wheels
+        if (!enabled) return;
+        float newTraction = context.performed ? driftTraction : baseTraction;
+
+        allWheels[1].GripFactor = newTraction;
+        allWheels[2].GripFactor = newTraction;
     }
 }
