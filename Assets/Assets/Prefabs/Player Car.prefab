@@ -599,7 +599,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 1
+      value: 0.6
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -658,7 +658,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   rubberBandAmount: 0.15
-  softVelocityCap: 50
+  softVelocityCap: 0
   hardVelocityCap: 60
   baseTraction: 1
   driftTraction: 0.5

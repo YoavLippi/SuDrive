@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     [Header("Setup")]
     [SerializeField] private List<TrackedPlayer> playersArr;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private int requiredRoundWins;
     
     [Header("Runtime Variables")]
     [SerializeField] private int deadPlayers;
@@ -59,17 +60,24 @@ public class GameController : MonoBehaviour
         
         //This will update if new players are added
         playerObjArr = new List<GameObject>(MetaController.Instance.joinedPlayers);
+        deadPlayers = 0;
         
         for (int i = 0; i < playerObjArr.Count; i++)
         {
             Debug.Log(playerObjArr[i]);
             bool foundFlag = false;
-            foreach (var trackedPlayer in playersArr)
+            for (int j = 0; j < playersArr.Count; j++)
             {
-                if (trackedPlayer.playerObj == playerObjArr[i])
+                if (playersArr[j].playerObj == playerObjArr[i])
                 {
                     foundFlag = true;
-                    trackedPlayer.playerObj.GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
+
+                    playersArr[j].playerObj
+                        .GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
+
+                    var tempT = playersArr[j];
+                    tempT.isDead = false;
+                    playersArr[j] = tempT;
                 }
             }
             if (foundFlag) break;
@@ -103,9 +111,36 @@ public class GameController : MonoBehaviour
                 var temp = playersArr[i];
                 temp.isDead = true;
                 playersArr[i] = temp;
-                
+                deadPlayers++;
                 break;
             }
         }
+
+        if (deadPlayers == playersArr.Count - 1)
+        {
+            for (int i = 0; i < playersArr.Count; i++)
+            {
+                if (!playersArr[i].isDead)
+                {
+                    var temp = playersArr[i];
+                    temp.score++;
+                    playersArr[i] = temp;
+                    if (temp.score == requiredRoundWins)
+                    {
+                        DoWin(playersArr[i]);
+                    }
+                    else
+                    {
+                        StartRound();
+                    }
+                }
+            }
+        }
+    }
+
+    private void DoWin(TrackedPlayer winner)
+    {
+        Debug.Log($"{winner.playerObj.name} is the winner");
+        //TODO: boot to main menu or go to win scene
     }
 }

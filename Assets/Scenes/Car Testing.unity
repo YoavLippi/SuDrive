@@ -1468,6 +1468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   playersArr: []
   playerPrefab: {fileID: 3434694513921635593, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+  requiredRoundWins: 3
   deadPlayers: 0
   playerObjArr: []
 --- !u!1 &1929596300
@@ -1861,6 +1862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5691e098907e9b44b6d1cef8ba96d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  _gameController: {fileID: 0}
 --- !u!1 &1959521591
 GameObject:
   m_ObjectHideFlags: 0
