@@ -16,6 +16,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private int deadPlayers;
 
     [SerializeField] private List<GameObject> playerObjArr;
+    
+    public UnityEvent<TrackedPlayer> Win;
+    public UnityEvent roundStart;
 
     [Serializable]
     public struct TrackedPlayer
@@ -127,18 +130,18 @@ public class GameController : MonoBehaviour
                     playersArr[i] = temp;
                     if (temp.score == requiredRoundWins)
                     {
-                        DoWin(playersArr[i]);
+                        Win.Invoke(playersArr[i]);
                     }
                     else
                     {
-                        StartRound();
+                        roundStart.Invoke();
                     }
                 }
             }
         }
     }
 
-    private void DoWin(TrackedPlayer winner)
+    public void DoWin(TrackedPlayer winner)
     {
         Debug.Log($"{winner.playerObj.name} is the winner");
         //TODO: boot to main menu or go to win scene
