@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -163,7 +164,7 @@ public class CarController : MonoBehaviour
         {
             float rawInputVal = context.ReadValue<float>();;
             //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
-            currentAcceleration = accelCurve.Evaluate(rawInputVal);
+            currentAcceleration = accelCurve.Evaluate(rawInputVal)* (isBoosting?1.2f:1);
             softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
         }
     }
@@ -209,6 +210,52 @@ public class CarController : MonoBehaviour
 
             allWheels[1].GripFactor = newTraction;
             allWheels[2].GripFactor = newTraction;
+        }
+    }
+    
+
+    /// <summary>
+    /// Coroutine for stunning the car
+    /// </summary>
+    /// <param name="stunTime">The amount of time, in seconds, to stun the car</param>
+    public IEnumerator DoStun(float stunTime)
+    {
+        foreach (var wheel in allWheels)
+        {
+            wheel.GripFactor = 0f;
+        }
+
+        isBoosting = false;
+        currentBreakForce = 0;
+        currentAcceleration = 0;
+        softVelocityCap = 50;
+
+        currentState = CarStates.Stunned;
+        
+        yield return new WaitForSeconds(stunTime);
+        
+        _playerInput.actions.Disable();
+        _playerInput.actions.Enable();
+        
+        foreach (var wheel in allWheels)
+        {
+            wheel.GripFactor = baseTraction;
+        }
+
+        softVelocityCap = 0;
+        currentState = CarStates.Actionable;
+    }
+
+    public void GetStunned(float stunTime)
+    {
+        StartCoroutine(DoStun(stunTime));
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Player") && isBoosting)
+        {
+            other.gameObject.GetComponent<CarController>().GetStunned(1.5f);
         }
     }
 }

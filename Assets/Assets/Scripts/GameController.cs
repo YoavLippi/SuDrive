@@ -74,7 +74,7 @@ public class GameController : MonoBehaviour
                 if (playersArr[j].playerObj == playerObjArr[i])
                 {
                     foundFlag = true;
-
+                    Debug.Log("The object is already in the array");
                     playersArr[j].playerObj
                         .GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
 
@@ -83,7 +83,7 @@ public class GameController : MonoBehaviour
                     playersArr[j] = tempT;
                 }
             }
-            if (foundFlag) break;
+            if (foundFlag) continue;
             
             TrackedPlayer temp = new TrackedPlayer();
             playerObjArr[i].GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
@@ -136,6 +136,8 @@ public class GameController : MonoBehaviour
                     {
                         roundStart.Invoke();
                     }
+
+                    break;
                 }
             }
         }
