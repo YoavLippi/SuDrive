@@ -35,6 +35,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private float currentAcceleration = 0;
     [SerializeField] private float currentBreakForce = 0;
     [SerializeField] private bool isBoosting;
+    [SerializeField] private bool isAbilityOn;
 
     [Header("State Control")] 
     [SerializeField] private CarStates currentState;
@@ -62,6 +63,8 @@ public class CarController : MonoBehaviour
         Dead
     }
 
+    private AbilityController abilityController;
+
     /*private void OnEnable()
     {
         _playerInput.actions.Enable();
@@ -75,6 +78,7 @@ public class CarController : MonoBehaviour
     void Start()
     {
         carBody = GetComponent<Rigidbody2D>();
+        abilityController = GetComponent<AbilityController>();
         allWheels = new List<WheelHandler> { frWheel, brWheel, blWheel, flWheel };
     }
 
@@ -188,6 +192,18 @@ public class CarController : MonoBehaviour
         if (currentState == CarStates.Actionable)
         {
             isBoosting = (_playerInput.actions.FindAction("Boost").ReadValue<int>() == 1);
+        }
+    }
+
+    private void OnAbility ()
+    {
+        if (!enabled) return;
+        if (currentState == CarStates.Actionable)
+        {
+            isAbilityOn = _playerInput.actions.FindAction("Ability").ReadValue<float>() == 1;
+            Debug.Log($"Ability button pressed: {isAbilityOn}");
+            if (isAbilityOn)
+                abilityController.bumperAbility.Activate(this);
         }
     }
 }

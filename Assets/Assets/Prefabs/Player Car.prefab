@@ -288,6 +288,7 @@ GameObject:
   - component: {fileID: 2158134786307599745}
   - component: {fileID: 7619416482190873509}
   - component: {fileID: 5065919790299985396}
+  - component: {fileID: -5668616673067670455}
   m_Layer: 6
   m_Name: Player Car
   m_TagString: Player
@@ -600,6 +601,7 @@ MonoBehaviour:
   currentAcceleration: 0
   currentBreakForce: 0
   isBoosting: 0
+  isAbilityOn: 0
   currentState: 0
   debugText: {fileID: 7834899623771239391}
 --- !u!114 &5065919790299985396
@@ -616,6 +618,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   _playerInput: {fileID: 0}
   _carController: {fileID: 0}
+--- !u!114 &-5668616673067670455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3434694513921635593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a961196aa7d319c47babd1f38e1cb2d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityController
 --- !u!1 &4585628171727567291
 GameObject:
   m_ObjectHideFlags: 0
