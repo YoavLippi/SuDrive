@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -29,21 +30,29 @@ public class CarController : MonoBehaviour
     [SerializeField] private float rubberBandAmount;
     [SerializeField] private float softVelocityCap;
     [SerializeField] private float hardVelocityCap;
+    [SerializeField] [Range(0,1f)] private float baseTraction;
+    [SerializeField] [Range(0,1f)] private float driftTraction;
     
-    [Header("Listeners")]
-    [SerializeField] private Vector2 currentMoveDir = Vector2.zero;
+    [Header("Debug")]
+    [SerializeField] private float currentMoveDir = 0;
     [SerializeField] private float currentAcceleration = 0;
     [SerializeField] private float currentBreakForce = 0;
     [SerializeField] private bool isBoosting;
+    [SerializeField] private float currentSpeed;
+    [SerializeField] private bool isAbilityOn;
 
     [Header("State Control")] 
     [SerializeField] private CarStates currentState;
     
-    public Vector2 CurrentMoveDir => currentMoveDir;
+    public float CurrentMoveDir => currentMoveDir;
 
     public float CurrentAcceleration => currentAcceleration;
 
     public float CurrentBreakForce => currentBreakForce;
+
+    public float BaseTraction => baseTraction;
+
+    public float DriftTraction => driftTraction;
 
     public CarStates CurrentState
     {
@@ -61,11 +70,12 @@ public class CarController : MonoBehaviour
         Stunned,
         Dead
     }
+    private AbilityController abilityController;
 
-    /*private void OnEnable()
+    private void OnEnable()
     {
         _playerInput.actions.Enable();
-    }*/
+    }
 
     private void OnDisable()
     {
@@ -75,27 +85,28 @@ public class CarController : MonoBehaviour
     void Start()
     {
         carBody = GetComponent<Rigidbody2D>();
+        abilityController = GetComponent<AbilityController>();
+        //going clockwise around the car body, starting at the top right
         allWheels = new List<WheelHandler> { frWheel, brWheel, blWheel, flWheel };
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        currentSpeed = carBody.linearVelocity.magnitude;
         #region Physics
 
-        if (isBoosting)
+        //RubberBanding
+        DoHardVelocityClamp();
+        if (!isBoosting)
         {
-            
+            DoRubberBanding();
         }
         
         //steering control
-        float steerAngle = steeringCurve.Evaluate(Mathf.Abs(currentMoveDir.x)) * (currentMoveDir.x <=0 ? 1 : -1);
+        float steerAngle = steeringCurve.Evaluate(Mathf.Abs(currentMoveDir)) * (currentMoveDir <=0 ? 1 : -1);
         flWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
         frWheel.gameObject.transform.localRotation = Quaternion.Euler(0,0,steerAngle);
-        
-        //RubberBanding
-        DoHardVelocityClamp();
-        DoRubberBanding();
 
         #endregion
 
@@ -144,50 +155,122 @@ public class CarController : MonoBehaviour
     {
         if (debugText) debugText.text = $"Accel with val of {currentAcceleration}\n" +
                                         $"Reverse with val of {currentBreakForce}\n" +
-                                        $"Movedir - x:{currentMoveDir.x} y:{currentMoveDir.y}\n" +
+                                        $"Movedir - x:{currentMoveDir}\n" +
                                         $"Boosting? {isBoosting}";
     }
 
-    private void OnDrive()
+    public void OnDrive(InputAction.CallbackContext context)
     {
         if (!enabled) return;
 
         if (currentState == CarStates.Actionable)
         {
-            float rawInputVal = _playerInput.actions.FindAction("Drive").ReadValue<float>();
+            float rawInputVal = context.ReadValue<float>();;
             //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
-            currentAcceleration = accelCurve.Evaluate(rawInputVal);
+            currentAcceleration = accelCurve.Evaluate(rawInputVal)* (isBoosting?1.2f:1);
             softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
         }
     }
 
-    private void OnReverse()
+    public void OnReverse(InputAction.CallbackContext context)
     {
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            float rawInputVal = _playerInput.actions.FindAction("Reverse").ReadValue<float>();
+            float rawInputVal = context.ReadValue<float>();
             //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
             currentBreakForce = reverseCurve.Evaluate(rawInputVal);   
             softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
         }
     }
 
-    private void OnMove()
+    public void OnMove(InputAction.CallbackContext context)
     {
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();   
+            currentMoveDir = context.ReadValue<float>();
+            //currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();   
         }
     }
 
-    private void OnBoost()
+    public void OnBoost(InputAction.CallbackContext context)
     {
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            isBoosting = (_playerInput.actions.FindAction("Boost").ReadValue<int>() == 1);
+            isBoosting = context.performed;
+        }
+    }
+
+    public void OnDrift(InputAction.CallbackContext context)
+    {
+        //targeting only back wheels
+        if (!enabled) return;
+        if (currentState == CarStates.Actionable)
+        {
+            float newTraction = context.performed ? driftTraction : baseTraction;
+
+            allWheels[1].GripFactor = newTraction;
+            allWheels[2].GripFactor = newTraction;
+        }
+    }
+    
+
+    /// <summary>
+    /// Coroutine for stunning the car
+    /// </summary>
+    /// <param name="stunTime">The amount of time, in seconds, to stun the car</param>
+    public IEnumerator DoStun(float stunTime)
+    {
+        foreach (var wheel in allWheels)
+        {
+            wheel.GripFactor = 0f;
+        }
+
+        isBoosting = false;
+        currentBreakForce = 0;
+        currentAcceleration = 0;
+        softVelocityCap = 50;
+
+        currentState = CarStates.Stunned;
+        
+        yield return new WaitForSeconds(stunTime);
+        
+        _playerInput.actions.Disable();
+        _playerInput.actions.Enable();
+        
+        foreach (var wheel in allWheels)
+        {
+            wheel.GripFactor = baseTraction;
+        }
+
+        softVelocityCap = 0;
+        currentState = CarStates.Actionable;
+    }
+
+    public void GetStunned(float stunTime)
+    {
+        StartCoroutine(DoStun(stunTime));
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Player") && isBoosting)
+        {
+            other.gameObject.GetComponent<CarController>().GetStunned(1.5f);
+        }
+    }
+
+    private void OnAbility ()
+    {
+        if (!enabled) return;
+        if (currentState == CarStates.Actionable)
+        {
+            isAbilityOn = _playerInput.actions.FindAction("Ability").ReadValue<float>() == 1;
+            Debug.Log($"Ability button pressed: {isAbilityOn}");
+            if (isAbilityOn)
+                abilityController.bumperAbility.Activate(this);
         }
     }
 }

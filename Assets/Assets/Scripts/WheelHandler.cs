@@ -10,6 +10,13 @@ public class WheelHandler : MonoBehaviour
 
     [Header("Physics")] 
     [SerializeField] [Range(0,1f)] private float gripFactor = 1f;
+
+    public float GripFactor
+    {
+        get => gripFactor;
+        set => gripFactor = value;
+    }
+
     void Start()
     {
         parentObj = transform.parent.gameObject;
@@ -17,6 +24,7 @@ public class WheelHandler : MonoBehaviour
         {
             parentBody = parentObj.GetComponent<Rigidbody2D>();
             parentController = parentObj.GetComponent<CarController>();
+            gripFactor = parentController.BaseTraction;
         }
     }
 
