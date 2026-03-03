@@ -6,40 +6,40 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(PlayerInputManager))]
 public class MetaController : MonoBehaviour
 {
-    //Singleton behaviour for referencing joined players
-    public static MetaController Instance;
-    [SerializeField] private PlayerInputManager _manager;
-    [SerializeField] private Transform defaultSpawnPoint;
-    public List<GameObject> joinedPlayers = new List<GameObject>();
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+	//Singleton behaviour for referencing joined players
+	public static MetaController Instance;
+	[SerializeField] private PlayerInputManager _manager;
+	[SerializeField] private Transform defaultSpawnPoint;
+	public List<GameObject> joinedPlayers = new List<GameObject>();
+	private void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
+	}
 
-    //Currently fills the place with empty gameObjects that can be tracked.
-    private void OnPlayerJoined(PlayerInput playerInput)
-    {
-        joinedPlayers.Add(playerInput.gameObject);
-        Debug.Log($"User number {playerInput.playerIndex} joined");
-        playerInput.gameObject.transform.position =
-            (defaultSpawnPoint == null) ? new Vector3(0, 0) : defaultSpawnPoint.position;
-        DontDestroyOnLoad(playerInput);
-        Debug.Log($"New device added: {playerInput.GetDevice<InputDevice>()}");
-        //playerInput.GetComponent<CarController>().CurrentState = CarController.CarStates.Dead;
-    }
+	//Currently fills the place with empty gameObjects that can be tracked.
+	private void OnPlayerJoined(PlayerInput playerInput)
+	{
+		joinedPlayers.Add(playerInput.gameObject);
+		Debug.Log($"User number {playerInput.playerIndex} joined");
+		playerInput.gameObject.transform.position =
+				(defaultSpawnPoint == null) ? new Vector3(0, 0) : defaultSpawnPoint.position;
+		DontDestroyOnLoad(playerInput);
+		Debug.Log($"New device added: {playerInput.GetDevice<InputDevice>()}");
+		//playerInput.GetComponent<CarController>().CurrentState = CarController.CarStates.Dead;
+	}
 
-    private void OnPlayerLeft(PlayerInput playerInput)
-    {
-        joinedPlayers.Remove(playerInput.gameObject);
-        Destroy(playerInput.gameObject);
-        Debug.Log($"Device removed: {playerInput.GetDevice<InputDevice>()}");
-    }
+	private void OnPlayerLeft(PlayerInput playerInput)
+	{
+		joinedPlayers.Remove(playerInput.gameObject);
+		Destroy(playerInput.gameObject);
+		Debug.Log($"Device removed: {playerInput.GetDevice<InputDevice>()}");
+	}
 }
