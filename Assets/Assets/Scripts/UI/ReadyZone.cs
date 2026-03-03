@@ -61,8 +61,8 @@ public class ReadyZone : MonoBehaviour
 			if (countdownText != null)
 			{
 				countdownText.text = Mathf.CeilToInt(remainingTime).ToString();
-				float scale = 1f + (Mathf.PingPong(timer * 2, 0.2f));
-				countdownText.transform.localScale = new Vector3(scale, scale, 1);
+				float scale = 1f + (Mathf.PingPong(timer * 2, 0.2f));               // These two lines bounce the count down text to give it an arcade feel.
+				countdownText.transform.localScale = new Vector3(scale, scale, 1);	// sourced from: 
 			}
 
 			sprite.color = Color.Lerp(originalColor, readyColor, timer/countdownDuration);	
