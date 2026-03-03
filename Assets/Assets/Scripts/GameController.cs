@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
 {
     [Header("Setup")]
     [SerializeField] private List<TrackedPlayer> playersArr;
+    [SerializeField] private List<Transform> spawnPointParents;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private int requiredRoundWins;
     
@@ -33,34 +34,11 @@ public class GameController : MonoBehaviour
     {
         playersArr = new List<TrackedPlayer>();
         deadPlayers = 0;
+        StartRound();
     }
 
     public void StartRound()
     {
-        /*_inputDevices = MetaController.Instance.joinedDevices;
-        //PlayerInput player = PlayerInput.Instantiate(playerPrefab, pairWithDevice:_inputDevices[0]);
-        if (playersArr.Count > 0)
-        {
-           foreach (var player in playersArr)
-           {
-               playersArr.Remove(player);
-               Destroy(player.playerObj);
-           } 
-        }
-        
-        Debug.Log($"input devices: {_inputDevices.Count}");
-        for (int i = 0; i < _inputDevices.Count; i++)
-        {
-            Debug.Log(_inputDevices[i]);
-            PlayerInput player = PlayerInput.Instantiate(playerPrefab, pairWithDevice:_inputDevices[i]);
-            TrackedPlayer temp = new TrackedPlayer();
-            temp.playerObj = player.gameObject;
-            temp.playerController = player.GetComponent<PlayerController>();
-            temp.isDead = false;
-            temp.score = 0;
-            playersArr.Add(temp);
-        }*/
-        
         //This will update if new players are added
         playerObjArr = new List<GameObject>(MetaController.Instance.joinedPlayers);
         deadPlayers = 0;
@@ -97,9 +75,11 @@ public class GameController : MonoBehaviour
         //starting round
         //TODO: Countdown
         //TODO: Spawn locations
-        foreach (var player in playersArr)
+        int correspondingIndex = playersArr.Count - 1;
+        for (int i = 0; i < playersArr.Count; i++)
         {
-            player.playerObj.transform.position = new Vector3(0, 0, 0);
+            playersArr[i].playerObj.transform.position = spawnPointParents[correspondingIndex].GetChild(i).position;
+            playersArr[i].playerObj.transform.rotation = spawnPointParents[correspondingIndex].GetChild(i).rotation;
         }
     }
     
