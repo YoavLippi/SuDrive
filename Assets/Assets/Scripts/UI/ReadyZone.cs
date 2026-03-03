@@ -10,6 +10,8 @@ public class ReadyZone : MonoBehaviour
 
 	[Header("Visuals")]
 	public Color readyColor = Color.darkSeaGreen;
+
+	// original colour of start button - EB391E
 	private Color originalColor;
 	private SpriteRenderer sprite;
 
