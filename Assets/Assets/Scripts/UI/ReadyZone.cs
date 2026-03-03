@@ -12,10 +12,15 @@ public class ReadyZone : MonoBehaviour
 	[Header("Visuals")]
 	public Color readyColor = Color.darkSeaGreen;
 
+	[Header("Audio")]
+	public AudioSource audioSource;
+	public AudioClip beepSound;
+
 	// original colour of start button - EB391E
 	private Color originalColor;
 	private SpriteRenderer sprite;
-
+	private bool hasPlayedAudio = false;
+	private int lastDisplayedTime = -1;
 	private int playersOnPad = 0;
 	private float timer = 0f;
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -63,21 +68,38 @@ public class ReadyZone : MonoBehaviour
 
 		if (totalJoined > 1 && playersOnPad == totalJoined)
 		{
-			timer += Time.deltaTime;
+			if (!hasPlayedAudio)
+			{
+				if (audioSource != null && beepSound != null)
+				{
+					audioSource.clip = beepSound;
+					audioSource.Play();
+				}
+				hasPlayedAudio = true;
+			}
 
+			timer += Time.deltaTime;
 			float remainingTime = Mathf.Max(0, countdownDuration - timer);
+
 			if (countdownText != null)
 			{
-				countdownText.text = Mathf.CeilToInt(remainingTime).ToString();
+				if (remainingTime > 0.1f)
+				{
+					countdownText.text = Mathf.CeilToInt(remainingTime).ToString();
+				}
+				else
+				{
+					countdownText.text = "START!";
+				}
 
-				// The "Haptic" Pulse
+				// Pulse effect
 				float pulse = 1f + (Mathf.PingPong(timer * 2, 0.15f));
 				countdownText.transform.localScale = new Vector3(pulse, pulse, 1);
 			}
 
 			sprite.color = Color.Lerp(originalColor, readyColor, timer / countdownDuration);
 
-			if (timer >= countdownDuration)
+			if (timer >= countdownDuration + 0.3f)
 			{
 				SceneManager.LoadScene(gameSceneName);
 			}
@@ -88,10 +110,26 @@ public class ReadyZone : MonoBehaviour
 		}
 	}
 
+	void PlayBeep()
+	{
+		if (audioSource != null && beepSound != null)
+		{
+			audioSource.PlayOneShot(beepSound);
+		}
+	}
+
 	void ResetCountdown()
 	{
 		timer = 0f;
+
+		if (hasPlayedAudio)
+		{
+			if (audioSource != null) audioSource.Stop();
+			hasPlayedAudio = false;
+		}
+
 		sprite.color = originalColor;
+
 		if (countdownText != null)
 		{
 			int totalJoined = metaController.joinedPlayers.Count;
@@ -99,6 +137,7 @@ public class ReadyZone : MonoBehaviour
 				countdownText.text = "WAITING FOR OTHERS...";
 			else
 				countdownText.text = "DRIVE HERE TO START";
+			countdownText.transform.localScale = Vector3.one;
 		}
 	}
 }
