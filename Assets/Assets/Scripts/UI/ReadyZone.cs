@@ -92,7 +92,7 @@ public class ReadyZone : MonoBehaviour
 					countdownText.text = "START!";
 				}
 
-				// Pulse effect
+				// Pulse effect - code written with help from AI: Gemini
 				float pulse = 1f + (Mathf.PingPong(timer * 2, 0.15f));
 				countdownText.transform.localScale = new Vector3(pulse, pulse, 1);
 			}
