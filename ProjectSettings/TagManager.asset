@@ -14,7 +14,7 @@ TagManager:
   - Player
   - Environment Collision Box
   - Environment
-  - 
+  - Ground
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Players
+    uniqueID: 1035470791
     locked: 0
   - name: UI
     uniqueID: 3225180809

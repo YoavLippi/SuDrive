@@ -26,7 +26,6 @@ public class PlayerController : MonoBehaviour
         //Disabling and re-enabling the input should clear all of the inputs
         _playerInput.actions.Disable();
         _playerInput.actions.Enable();
-        
         _carController.CurrentState = CarController.CarStates.Dead;
     }
 }

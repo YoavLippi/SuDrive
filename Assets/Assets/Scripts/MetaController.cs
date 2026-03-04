@@ -9,6 +9,7 @@ public class MetaController : MonoBehaviour
     //Singleton behaviour for referencing joined players
     public static MetaController Instance;
     [SerializeField] private PlayerInputManager _manager;
+    [SerializeField] private Transform defaultSpawnPoint;
     public List<GameObject> joinedPlayers = new List<GameObject>();
     private void Awake()
     {
@@ -28,7 +29,8 @@ public class MetaController : MonoBehaviour
     {
         joinedPlayers.Add(playerInput.gameObject);
         Debug.Log($"User number {playerInput.playerIndex} joined");
-        playerInput.gameObject.transform.position = new Vector3(0, 10, 0);
+        playerInput.gameObject.transform.position =
+            (defaultSpawnPoint == null) ? new Vector3(0, 0) : defaultSpawnPoint.position;
         DontDestroyOnLoad(playerInput);
         Debug.Log($"New device added: {playerInput.GetDevice<InputDevice>()}");
         //playerInput.GetComponent<CarController>().CurrentState = CarController.CarStates.Dead;

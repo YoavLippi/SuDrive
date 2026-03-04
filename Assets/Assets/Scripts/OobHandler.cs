@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class OobHandler : MonoBehaviour
 {
+    [SerializeField] private GameController _gameController;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
     }
 
     // Update is called once per frame
@@ -20,7 +21,7 @@ public class OobHandler : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log(other.gameObject);
-            other.transform.parent.GetComponent<PlayerController>().DoDeath();
+            _gameController.KillPlayer(other.transform.parent.gameObject);
         }
     }
 }
