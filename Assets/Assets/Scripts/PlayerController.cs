@@ -11,9 +11,11 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject[] currentSprites;
 
-    private int spritesIndex = 0;
+    private int playerIndex = 0;
 
     [SerializeField] private CarSprites[] carSpriteArr;
+    
+    [SerializeField] private Gradient[] trailColorArray;
 
     [Serializable]
     public struct CarSprites
@@ -61,21 +63,26 @@ public class PlayerController : MonoBehaviour
         _carController = GetComponent<CarController>();
         try
         {
-            currentSprites[0].GetComponent<SpriteRenderer>().sprite = carSpriteArr[spritesIndex].Body;
-            currentSprites[1].GetComponent<SpriteRenderer>().sprite = carSpriteArr[spritesIndex].WheelFr;
-            currentSprites[2].GetComponent<SpriteRenderer>().sprite = carSpriteArr[spritesIndex].WheelBr;
-            currentSprites[3].GetComponent<SpriteRenderer>().sprite = carSpriteArr[spritesIndex].WheelBl;
-            currentSprites[4].GetComponent<SpriteRenderer>().sprite = carSpriteArr[spritesIndex].WheelFl;
+            currentSprites[0].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].Body;
+            currentSprites[1].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelFr;
+            currentSprites[2].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelBr;
+            currentSprites[3].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelBl;
+            currentSprites[4].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelFl;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
+
+        foreach (var wheel in _carController.allWheels)
+        {
+            wheel.SetGradient(trailColorArray[playerIndex]);
+        }
     }
 
     public void OnJoin(PlayerInput playerInput)
     {
-        spritesIndex = playerInput.playerIndex;
+        playerIndex = playerInput.playerIndex;
     }
 
     public void DoDeath()

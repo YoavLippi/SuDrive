@@ -17,7 +17,8 @@ public class CarController : MonoBehaviour
     [SerializeField] private WheelHandler flWheel;
     [SerializeField] private WheelHandler brWheel;
     [SerializeField] private WheelHandler blWheel;
-    private List<WheelHandler> allWheels;
+    [SerializeField] private TrailRenderer _trailRenderer;
+    public List<WheelHandler> allWheels;
 
     [SerializeField] private Rigidbody2D carBody;
 
@@ -203,6 +204,7 @@ public class CarController : MonoBehaviour
         if (currentState == CarStates.Actionable)
         {
             isBoosting = context.performed;
+            _trailRenderer.emitting = context.performed;
         }
     }
 
@@ -221,6 +223,11 @@ public class CarController : MonoBehaviour
             
             allWheels[0].GripFactor = newTractionFront;
             allWheels[3].GripFactor = newTractionFront;
+
+            foreach (var wheel in allWheels)
+            {
+                wheel.SetDrift(context.performed);
+            }
 
             isDrifting = context.performed;
         }
@@ -268,16 +275,17 @@ public class CarController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") && isBoosting)
         {
-            other.gameObject.GetComponent<CarController>().GetStunned(1.5f);
+            other.gameObject.GetComponent<CarController>().GetStunned(0.45f);
         }
     }
 
-    private void OnAbility ()
+    public void OnAbility(InputAction.CallbackContext context)
     {
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            isAbilityOn = _playerInput.actions.FindAction("Ability").ReadValue<float>() == 1;
+            Debug.Log("Ability pressed");
+            isAbilityOn = context.performed;
             Debug.Log($"Ability button pressed: {isAbilityOn}");
             if (isAbilityOn)
                 abilityController.bumperAbility.Activate(this);
