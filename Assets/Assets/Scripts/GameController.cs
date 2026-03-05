@@ -58,7 +58,10 @@ public class GameController : MonoBehaviour
 
                     var tempT = playersArr[j];
                     tempT.isDead = false;
+                    tempT.playerObj.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+                    tempT.playerObj.GetComponent<Rigidbody2D>().angularVelocity = 0f;
                     playersArr[j] = tempT;
+                    break;
                 }
             }
             if (foundFlag) continue;
@@ -74,7 +77,6 @@ public class GameController : MonoBehaviour
         
         //starting round
         //TODO: Countdown
-        //TODO: Spawn locations
         int correspondingIndex = playersArr.Count - 1;
         for (int i = 0; i < playersArr.Count; i++)
         {
