@@ -17,7 +17,8 @@ public class CarController : MonoBehaviour
     [SerializeField] private WheelHandler flWheel;
     [SerializeField] private WheelHandler brWheel;
     [SerializeField] private WheelHandler blWheel;
-    private List<WheelHandler> allWheels;
+    [SerializeField] private TrailRenderer _trailRenderer;
+    public List<WheelHandler> allWheels;
 
     [SerializeField] private Rigidbody2D carBody;
 
@@ -31,13 +32,15 @@ public class CarController : MonoBehaviour
     [SerializeField] private float softVelocityCap;
     [SerializeField] private float hardVelocityCap;
     [SerializeField] [Range(0,1f)] private float baseTraction;
-    [SerializeField] [Range(0,1f)] private float driftTraction;
+    [FormerlySerializedAs("driftTraction")][SerializeField] [Range(0,1f)] private float driftTractionBack;
+    [SerializeField] [Range(0,2f)] private float driftTractionFront;
     
     [Header("Debug")]
     [SerializeField] private float currentMoveDir = 0;
     [SerializeField] private float currentAcceleration = 0;
     [SerializeField] private float currentBreakForce = 0;
     [SerializeField] private bool isBoosting;
+    [SerializeField] private bool isDrifting;
     [SerializeField] private float currentSpeed;
     [SerializeField] private bool isAbilityOn;
 
@@ -52,7 +55,7 @@ public class CarController : MonoBehaviour
 
     public float BaseTraction => baseTraction;
 
-    public float DriftTraction => driftTraction;
+    public float DriftTractionBack => driftTractionBack;
 
     public CarStates CurrentState
     {
@@ -167,7 +170,7 @@ public class CarController : MonoBehaviour
         {
             float rawInputVal = context.ReadValue<float>();;
             //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
-            currentAcceleration = accelCurve.Evaluate(rawInputVal)* (isBoosting?1.2f:1);
+            currentAcceleration = accelCurve.Evaluate(rawInputVal)* (isBoosting?1.3f:1);
             softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
         }
     }
@@ -175,6 +178,7 @@ public class CarController : MonoBehaviour
     public void OnReverse(InputAction.CallbackContext context)
     {
         if (!enabled) return;
+        
         if (currentState == CarStates.Actionable)
         {
             float rawInputVal = context.ReadValue<float>();
@@ -200,6 +204,7 @@ public class CarController : MonoBehaviour
         if (currentState == CarStates.Actionable)
         {
             isBoosting = context.performed;
+            _trailRenderer.emitting = context.performed;
         }
     }
 
@@ -209,10 +214,22 @@ public class CarController : MonoBehaviour
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            float newTraction = context.performed ? driftTraction : baseTraction;
+            float newTraction = context.performed ? driftTractionBack : baseTraction;
 
             allWheels[1].GripFactor = newTraction;
             allWheels[2].GripFactor = newTraction;
+            
+            float newTractionFront = context.performed ? driftTractionFront : baseTraction;
+            
+            allWheels[0].GripFactor = newTractionFront;
+            allWheels[3].GripFactor = newTractionFront;
+
+            foreach (var wheel in allWheels)
+            {
+                wheel.SetDrift(context.performed);
+            }
+
+            isDrifting = context.performed;
         }
     }
     
@@ -258,16 +275,17 @@ public class CarController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") && isBoosting)
         {
-            other.gameObject.GetComponent<CarController>().GetStunned(1.5f);
+            other.gameObject.GetComponent<CarController>().GetStunned(0.45f);
         }
     }
 
-    private void OnAbility ()
+    public void OnAbility(InputAction.CallbackContext context)
     {
         if (!enabled) return;
         if (currentState == CarStates.Actionable)
         {
-            isAbilityOn = _playerInput.actions.FindAction("Ability").ReadValue<float>() == 1;
+            Debug.Log("Ability pressed");
+            isAbilityOn = context.performed;
             Debug.Log($"Ability button pressed: {isAbilityOn}");
             if (isAbilityOn)
                 abilityController.bumperAbility.Activate(this);

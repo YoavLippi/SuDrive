@@ -8,6 +8,9 @@ public class WheelHandler : MonoBehaviour
     [SerializeField] private Rigidbody2D parentBody;
     [SerializeField] private CarController parentController;
 
+    [Header("Child Setup")] [SerializeField]
+    private TrailRenderer driftTrail;
+
     [Header("Physics")] 
     [SerializeField] [Range(0,1f)] private float gripFactor = 1f;
 
@@ -78,6 +81,16 @@ public class WheelHandler : MonoBehaviour
         #endregion
 
         #endregion
+    }
+
+    public void SetDrift(bool val)
+    {
+        driftTrail.emitting = val;
+    }
+
+    public void SetGradient(Gradient val)
+    {
+        driftTrail.colorGradient = val;
     }
 
     private void OnDrive()
