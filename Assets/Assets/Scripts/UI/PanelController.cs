@@ -21,10 +21,9 @@ public class PanelController : MonoBehaviour
 
 			// Check both potential toggle buttons regardless of current map
 			var infoAction = playerInput.actions.FindAction("ToggleInfo");
-			var cancelAction = playerInput.actions.FindAction("Cancel");
+			//var cancelAction = playerInput.actions.FindAction("Cancel");
 
-			if ((infoAction != null && infoAction.IsPressed()) ||
-					(cancelAction != null && cancelAction.IsPressed()))
+			if ((infoAction != null && infoAction.IsPressed()) )
 			{
 				isAnyButtonPressed = true;
 				break;
@@ -42,20 +41,31 @@ public class PanelController : MonoBehaviour
 
 	void ToggleMenu()
 	{
-		isPaused = !isPaused;
+		isPaused = !panelToToggle.activeSelf;
 		panelToToggle.SetActive(isPaused);
-
-		// 1. Reset Time Scale
 		Time.timeScale = isPaused ? 0f : 1f;
 
-		// 2. Switch Maps for EVERYONE
-		string targetMap = isPaused ? "UI" : "Gameplay";
 		foreach (GameObject player in MetaController.Instance.joinedPlayers)
 		{
 			if (player == null) continue;
-			player.GetComponent<PlayerInput>().SwitchCurrentActionMap(targetMap);
-		}
 
-		Debug.Log($"Switching to {targetMap}. Game Paused: {isPaused}");
+			// ALL THE BELOW CODE WAS MADE AND ASSISTED BY AI THROUGH AI DEBUGGING AND TESTING
+			// 1. Reset Physics to prevent the "Disappearing" glitch
+			Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+			if (rb != null)
+			{
+				rb.linearVelocity = Vector2.zero; // Stops the car from rocket-launching
+				rb.angularVelocity = 0f;
+				rb.Sleep(); // Briefly puts the physics to sleep to reset the 'math'
+				rb.WakeUp();
+			}
+
+			// 2. Refresh Input
+			PlayerInput pInput = player.GetComponent<PlayerInput>();
+			if (pInput != null)
+			{
+				pInput.SwitchCurrentActionMap(isPaused ? "UI" : "Player");
+			}
+		}
 	}
 }

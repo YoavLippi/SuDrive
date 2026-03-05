@@ -558,7 +558,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 5
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -863,7 +863,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Back: Press "B"'
+  m_text: 'Back: Press "I"'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5d85aa101ffb39a4ebfe5d2b10dd64c5, type: 2}
   m_sharedMaterial: {fileID: 8836269775046220102, guid: 5d85aa101ffb39a4ebfe5d2b10dd64c5, type: 2}
@@ -1076,9 +1076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a70bcd694729347824e810792e6272, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PanelController
-  panelToDisable: {fileID: 1446025804}
   panelToToggle: {fileID: 1446025804}
-  playerInput: {fileID: 2158134786307599745, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
 --- !u!4 &800235156
 Transform:
   m_ObjectHideFlags: 0
@@ -1128,8 +1126,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 352, y: -458}
-  m_SizeDelta: {x: 430.11, y: 62.205}
+  m_AnchoredPosition: {x: 375.29675, y: -458}
+  m_SizeDelta: {x: 476.7035, y: 62.205}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &864632157
 MonoBehaviour:
@@ -1151,7 +1149,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Back: East button'
+  m_text: 'Back: North button'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5d85aa101ffb39a4ebfe5d2b10dd64c5, type: 2}
   m_sharedMaterial: {fileID: 8836269775046220102, guid: 5d85aa101ffb39a4ebfe5d2b10dd64c5, type: 2}
@@ -2602,7 +2600,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 5
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -6038,7 +6036,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 5
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

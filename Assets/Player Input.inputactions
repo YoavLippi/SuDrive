@@ -849,62 +849,12 @@
                 },
                 {
                     "name": "",
-                    "id": "5a0c5705-2c54-4488-85c7-da060df37fe8",
-                    "path": "<Gamepad>/buttonEast",
+                    "id": "2d87b4b6-2d77-4aaa-8e2a-96ddf00353cb",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Gamepad",
+                    "groups": "",
                     "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cd11ea7a-32bc-4d85-aad5-9fe9abfdc58a",
-                    "path": "<Keyboard>/#(B)",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Gameplay",
-            "id": "5c8119b8-8b14-48af-bb5d-2699b20fc323",
-            "actions": [
-                {
-                    "name": "ToggleInfo",
-                    "type": "Button",
-                    "id": "864166c3-2afd-4620-ac42-6b72a35f3918",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "7b63902f-6cf5-43d8-8133-00de7f048035",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ToggleInfo",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "de6799c3-3643-4549-8d75-1924b2d0170e",
-                    "path": "<Keyboard>/#(I)",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "ToggleInfo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
