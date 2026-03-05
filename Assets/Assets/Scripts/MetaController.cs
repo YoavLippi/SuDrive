@@ -42,10 +42,10 @@ public class MetaController : MonoBehaviour
         //playerInput.GetComponent<CarController>().CurrentState = CarController.CarStates.Dead;
     }
 
-    private void OnPlayerLeft(PlayerInput playerInput)
-    {
-        joinedPlayers.Remove(playerInput.gameObject);
-        Destroy(playerInput.gameObject);
-        Debug.Log($"Device removed: {playerInput.GetDevice<InputDevice>()}");
-    }
+	private void OnPlayerLeft(PlayerInput playerInput)
+	{
+		joinedPlayers.Remove(playerInput.gameObject);
+		Destroy(playerInput.gameObject);
+		Debug.Log($"Device removed: {playerInput.GetDevice<InputDevice>()}");
+	}
 }
