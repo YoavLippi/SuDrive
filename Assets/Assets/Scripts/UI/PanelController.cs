@@ -3,70 +3,59 @@ using UnityEngine.InputSystem;
 
 public class PanelController : MonoBehaviour
 {
-	[SerializeField] private GameObject panelToDisable;
 	[SerializeField] private GameObject panelToToggle;
-	[SerializeField] private PlayerInput playerInput;
+	private bool isPaused = false;
+	private bool wasPressedLastFrame = false;
 
-	//void Start()
-	//{
-	//	// Ensure we start in driving mode so the "I" key works!
-	//	playerInput.SwitchCurrentActionMap("Gameplay");
-
-	//	// Safety: make sure the panel is actually off at the start
-	//	if (panelToToggle != null) panelToToggle.SetActive(false);
-	//}
-	private void OnEnable()
+	void Update()
 	{
-		// Bind to the actions defined in your Input Action Asset
-		playerInput.actions["Cancel"].performed += OnTogglePressed;     // B / East
-		playerInput.actions["ToggleInfo"].performed += OnTogglePressed; // I / North
-	}
+		// Use UnscaledTime or check every frame regardless of Time.timeScale
+		if (MetaController.Instance == null) return;
 
-	private void OnDisable()
-	{
-		playerInput.actions["Cancel"].performed -= OnTogglePressed;
-		playerInput.actions["ToggleInfo"].performed -= OnTogglePressed;
-	}
+		bool isAnyButtonPressed = false;
 
-	private void OnTogglePressed(InputAction.CallbackContext context)
-	{
-		if (panelToToggle != null)
+		foreach (GameObject player in MetaController.Instance.joinedPlayers)
 		{
-			// 1. Toggle the panel visibility
-			bool turningOn = !panelToToggle.activeSelf;
-			panelToToggle.SetActive(turningOn);
+			if (player == null) continue;
+			var playerInput = player.GetComponent<PlayerInput>();
 
-			// 2. Control Time and Input Maps
-			if (turningOn)
+			// Check both potential toggle buttons regardless of current map
+			var infoAction = playerInput.actions.FindAction("ToggleInfo");
+			var cancelAction = playerInput.actions.FindAction("Cancel");
+
+			if ((infoAction != null && infoAction.IsPressed()) ||
+					(cancelAction != null && cancelAction.IsPressed()))
 			{
-				PauseGame();
-			}
-			else
-			{
-				ResumeGame();
+				isAnyButtonPressed = true;
+				break;
 			}
 		}
+
+		// State Check: Trigger only on "Down"
+		if (isAnyButtonPressed && !wasPressedLastFrame)
+		{
+			ToggleMenu();
+		}
+
+		wasPressedLastFrame = isAnyButtonPressed;
 	}
 
-	private void PauseGame()
+	void ToggleMenu()
 	{
-		// Stops Physics, Timers (DeltaTime), and Arena Crumbling
-		Time.timeScale = 0f;
+		isPaused = !isPaused;
+		panelToToggle.SetActive(isPaused);
 
-		// Switch to UI map so only 'Cancel' or 'Navigate' work
-		playerInput.SwitchCurrentActionMap("UI");
+		// 1. Reset Time Scale
+		Time.timeScale = isPaused ? 0f : 1f;
 
-		Debug.Log("Game Paused");
-	}
+		// 2. Switch Maps for EVERYONE
+		string targetMap = isPaused ? "UI" : "Gameplay";
+		foreach (GameObject player in MetaController.Instance.joinedPlayers)
+		{
+			if (player == null) continue;
+			player.GetComponent<PlayerInput>().SwitchCurrentActionMap(targetMap);
+		}
 
-	private void ResumeGame()
-	{
-		// Restores everything to normal speed
-		Time.timeScale = 1f;
-
-		// Switch back to driving mode
-		playerInput.SwitchCurrentActionMap("Gameplay");
-
-		Debug.Log("Game Resumed");
+		Debug.Log($"Switching to {targetMap}. Game Paused: {isPaused}");
 	}
 }

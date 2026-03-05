@@ -8,7 +8,6 @@ public class DestructibleTiles : MonoBehaviour
 	private Color originalColor;
 	private SpriteRenderer sprite;
 
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	private void Awake()
 	{
 		sprite = GetComponent<SpriteRenderer>();
@@ -22,7 +21,7 @@ public class DestructibleTiles : MonoBehaviour
 
 	public void TriggerFall()
 	{
-		if(!isFalling) { StartCoroutine(FallSequence()); }
+		if (!isFalling) { StartCoroutine(FallSequence()); }
 	}
 
 	IEnumerator FallSequence()
@@ -30,7 +29,7 @@ public class DestructibleTiles : MonoBehaviour
 		isFalling = true;
 		int flashCount = 3;
 
-		for(int i = 0; i < flashCount; i++)
+		for (int i = 0; i < flashCount; i++)
 		{
 			//AudioSource.PlayClipAtPoint(beepSound, transform.position);
 			sprite.color = Color.red;
@@ -41,9 +40,9 @@ public class DestructibleTiles : MonoBehaviour
 
 		GetComponent<Collider2D>().enabled = false;
 
-		while(transform.localScale.x > 0.01f)
+		while (transform.localScale.x > 0.01f)
 		{
-			transform.localScale -= Vector3.one * Time.deltaTime *3;
+			transform.localScale -= Vector3.one * Time.deltaTime * 3;
 			yield return null;
 		}
 

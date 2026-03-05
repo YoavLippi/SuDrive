@@ -543,6 +543,18 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 6f10b6c6-ea19-43e6-bd90-16462d3df802
     m_ActionName: 'Player/Ability[/Keyboard/ctrl]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 08fcd7d1-8c0c-43bb-94db-28ad72a58fc0
+    m_ActionName: 'UI/ToggleInfo[/Keyboard/i]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 864166c3-2afd-4620-ac42-6b72a35f3918
+    m_ActionName: 'Gameplay/ToggleInfo[/Keyboard/i]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fd007bd3-4f1a-4035-adb7-1fe47bfd82ea
+    m_ActionName: 'Player/ToggleInfo[/Keyboard/i,/XInputControllerWindows/buttonNorth]'
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

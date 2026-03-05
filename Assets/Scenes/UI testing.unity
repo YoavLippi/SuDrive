@@ -692,7 +692,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 5
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1714,7 +1714,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player1SpawnPoint
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1777,9 +1777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a70bcd694729347824e810792e6272, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PanelController
-  panelToDisable: {fileID: 329822723}
   panelToToggle: {fileID: 329822723}
-  playerInput: {fileID: 2158134786307599745, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
 --- !u!1 &1119112997
 GameObject:
   m_ObjectHideFlags: 0
@@ -4187,8 +4185,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 327.03992, y: -458}
-  m_SizeDelta: {x: 380.1877, y: 62.205}
+  m_AnchoredPosition: {x: 343.35254, y: -458}
+  m_SizeDelta: {x: 447.4049, y: 62.205}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2133649133
 MonoBehaviour:
@@ -4210,7 +4208,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Back: East button'
+  m_text: 'Back: North button'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5d85aa101ffb39a4ebfe5d2b10dd64c5, type: 2}
   m_sharedMaterial: {fileID: 8836269775046220102, guid: 5d85aa101ffb39a4ebfe5d2b10dd64c5, type: 2}
