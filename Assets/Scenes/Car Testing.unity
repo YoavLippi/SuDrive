@@ -387,7 +387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MetaController
   _manager: {fileID: 426384287}
-  defaultSpawnPoint: {fileID: 0}
+  defaultSpawnPointParent: {fileID: 0}
   joinedPlayers: []
 --- !u!114 &426384287
 MonoBehaviour:
@@ -439,7 +439,7 @@ MonoBehaviour:
         m_Flags: 0
       m_Flags: 0
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 1584424119565468860, guid: 633f5124ea31ae347b1c76e8826760c4, type: 3}
+  m_PlayerPrefab: {fileID: 3434694513921635593, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
   m_FixedNumberOfSplitScreens: -1
@@ -977,7 +977,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 2127129075
-  m_SortingLayer: 3
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: f6a085d8d5033c44d9227fd9c456bd98, type: 3}
@@ -2050,7 +2050,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 2127129075
-  m_SortingLayer: 3
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: a501a41fc19d3684491c3a01a32f7bbc, type: 3}
@@ -2507,7 +2507,7 @@ CompositeCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: d4a711c005394524bb2c2c0ed81b07ab, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -4582,7 +4582,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!212 &1929596303
 SpriteRenderer:
@@ -4673,6 +4673,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _gameController: {fileID: 0}
+  bounciness: 2
+  requiredSpeed: 50
+  requiredRotationSpeed: 180
+  bounceParticles: {fileID: 7244755661026013154, guid: 6a7fd6461c0151145bfb4a4112cd6097, type: 3}
+  breakParticles: {fileID: 7244755661026013154, guid: 77fd92b2d3a9bfa4897ab3aed4a40c0c, type: 3}
 --- !u!1 &1934857049
 GameObject:
   m_ObjectHideFlags: 0
