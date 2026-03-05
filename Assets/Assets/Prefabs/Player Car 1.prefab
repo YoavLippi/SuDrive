@@ -384,6 +384,22 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 9192db6f58009ab4b9a38f58abda3f41, type: 3}
+    - target: {fileID: 3327879238464100544, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: m_Size.x
+      value: 4.8438444
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327879238464100544, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: m_Size.y
+      value: 8.664049
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327879238464100544, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.023639202
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327879238464100544, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.3664055
+      objectReference: {fileID: 0}
     - target: {fileID: 3434694513921635593, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
       propertyPath: m_Name
       value: Player Car 1
@@ -396,6 +412,22 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5065919790299985396, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: 'currentSprites.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8571945412032310762}
+    - target: {fileID: 5065919790299985396, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: 'currentSprites.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8182300286850830080}
+    - target: {fileID: 5065919790299985396, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: 'currentSprites.Array.data[3]'
+      value: 
+      objectReference: {fileID: 4917266805821987142}
+    - target: {fileID: 5065919790299985396, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: 'currentSprites.Array.data[4]'
+      value: 
+      objectReference: {fileID: 7544911419015145241}
     - target: {fileID: 5377302163901317954, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.6
@@ -444,6 +476,38 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 2.6
       objectReference: {fileID: 0}
+    - target: {fileID: 6439946165389411548, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: m_Size.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619416482190873509, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: driftTractionFront
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619416482190873509, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: accelCurve.m_Curve.Array.data[1].value
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619416482190873509, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: steeringCurve.m_Curve.Array.data[1].value
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619416482190873509, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: steeringCurve.m_Curve.Array.data[0].inSlope
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619416482190873509, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: steeringCurve.m_Curve.Array.data[1].inSlope
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619416482190873509, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: steeringCurve.m_Curve.Array.data[0].outSlope
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619416482190873509, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      propertyPath: steeringCurve.m_Curve.Array.data[1].outSlope
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 8472232253125593050, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -452,7 +516,8 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3327879238464100544, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1137361032001042513, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
     - {fileID: 2802599960470021160, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
@@ -471,8 +536,53 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5377302163901317954, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3774970951933550965}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3434694513921635593, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5599461607280473226}
   m_SourcePrefab: {fileID: 100100000, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+--- !u!1 &1584424119565468860 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3434694513921635593, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
+  m_PrefabInstance: {fileID: 4203966362056061365}
+  m_PrefabAsset: {fileID: 0}
+--- !u!70 &5599461607280473226
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584424119565468860}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.58}
+  m_Size: {x: 5.045313, y: 9.15192}
+  m_Direction: 0
 --- !u!4 &3558282908227426911 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 808099617852337130, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
