@@ -16,7 +16,7 @@ public class ArenaManager : MonoBehaviour
 		// 2. Sort them by distance from (0,0,0) - descending (furthest first)
 		allTiles = tileArray.OrderByDescending(t => Vector3.Distance(t.transform.position, Vector3.zero)).ToList();
 
-		// 3. Start the repeating timer
+		// 3. Start repeating timer
 		InvokeRepeating("DropNextTile", 5f, timeBetweenFalls);
 	}
 

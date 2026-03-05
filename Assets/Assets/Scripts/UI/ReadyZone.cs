@@ -34,7 +34,6 @@ public class ReadyZone : MonoBehaviour
 		{
 			metaController = FindObjectOfType<MetaController>();
 		}
-
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
