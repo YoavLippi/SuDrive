@@ -119,6 +119,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &27452797
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 27452798}
+  m_Layer: 0
+  m_Name: Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &27452798
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27452797}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1257407077}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &116548470
 GameObject:
   m_ObjectHideFlags: 0
@@ -4292,6 +4323,7 @@ Transform:
   - {fileID: 1874337254}
   - {fileID: 1469245202}
   - {fileID: 1497687773}
+  - {fileID: 27452798}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1259234646
@@ -5411,6 +5443,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1833295795}
   - component: {fileID: 1833295796}
+  - component: {fileID: 1833295797}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -5427,7 +5460,7 @@ Transform:
   m_GameObject: {fileID: 1833295793}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.65244, y: 2.56899, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5485,6 +5518,33 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1833295797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833295793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 072fc9b8f66f17b4b8de67956b7df10c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  fractures:
+  - {fileID: 8846024141844601657, guid: f67929d55cd0c2245ae6992994e1d305, type: 3}
+  - {fileID: 5214005091753236617, guid: 0dcbd374edaa11f4392e6f442252f2f6, type: 3}
+  - {fileID: 5214005091753236617, guid: 5ad76969c028d8f428d436a272531f51, type: 3}
+  - {fileID: 5214005091753236617, guid: f95d10d6d3e1ea747b612832a1349395, type: 3}
+  - {fileID: 5214005091753236617, guid: 837260ff8b53de4458309947413bcc69, type: 3}
+  - {fileID: 5214005091753236617, guid: eb62ffc88f30361499ebe31afdaca268, type: 3}
+  - {fileID: 5214005091753236617, guid: 34cd1dcd1d0f52b45b9d0687df0eb888, type: 3}
+  - {fileID: 5214005091753236617, guid: e1fd797320e099e4f84717042bfa83b0, type: 3}
+  - {fileID: 5214005091753236617, guid: f5e37247cf9369d459b0f7c3da304daf, type: 3}
+  lookTarget: {fileID: 27452798}
+  arenaParent: {fileID: 1929596304}
+  fractureSpawnDelay: 5
+  startDelay: 0
+  isFracturing: 0
 --- !u!1 &1874337253
 GameObject:
   m_ObjectHideFlags: 0
@@ -6016,7 +6076,7 @@ SpriteRenderer:
   m_SortingLayerID: 2127129075
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_Sprite: {fileID: 21300000, guid: d7d90a6abbd1b6b41a283c00f0db2563, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
