@@ -244,7 +244,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1651961079201713477}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -377,6 +377,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -492810987300588980, guid: 5260554081b742741b05164cf2bde4fd, type: 3}
+      propertyPath: 'allColliders.Array.data[1]'
+      value: 
+      objectReference: {fileID: 4377624909076599320}
     - target: {fileID: 2399743317954188818, guid: 5260554081b742741b05164cf2bde4fd, type: 3}
       propertyPath: m_Name
       value: Fracture 1

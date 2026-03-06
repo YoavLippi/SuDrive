@@ -43,14 +43,16 @@ public class OobHandler : MonoBehaviour
             Vector2 contactPoint = myCol.ClosestPoint(other.transform.position);
                 
             //using empty gameobject to automatically align the particles
+            //Maybe fromToRotation would be better here?
             GameObject temp = new GameObject();
             temp.transform.position = contactPoint;
             temp.transform.LookAt(other.transform.position);
             Quaternion rot = temp.transform.rotation;
             Destroy(temp);
+            
             if (rbOther.linearVelocity.magnitude < requiredSpeed && Mathf.Abs(rbOther.angularVelocity) < requiredRotationSpeed)
             {
-                Debug.Log(other.gameObject);
+                //Debug.Log(other.gameObject);
                 
                 rbOther.AddForce(Mathf.Max((rbOther.linearVelocity*bounciness/rbOther.mass).magnitude, minimumBounceForce) * -rbOther.linearVelocity.normalized, ForceMode2D.Impulse);
                 Instantiate(bounceParticles, contactPoint, rot);

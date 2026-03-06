@@ -7641,6 +7641,7 @@ MonoBehaviour:
   _fractureHandler: {fileID: 0}
   deadPlayers: 0
   playerObjArr: []
+  deathAnim: {fileID: 0}
   Win:
     m_PersistentCalls:
       m_Calls:
@@ -7722,6 +7723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072fc9b8f66f17b4b8de67956b7df10c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  _gameController: {fileID: 1833295796}
   fractures:
   - {fileID: 8846024141844601657, guid: f67929d55cd0c2245ae6992994e1d305, type: 3}
   - {fileID: 5214005091753236617, guid: 0dcbd374edaa11f4392e6f442252f2f6, type: 3}
@@ -7733,12 +7735,13 @@ MonoBehaviour:
   - {fileID: 5214005091753236617, guid: e1fd797320e099e4f84717042bfa83b0, type: 3}
   - {fileID: 5214005091753236617, guid: f5e37247cf9369d459b0f7c3da304daf, type: 3}
   lookTarget: {fileID: 27452798}
-  arenaParent: {fileID: 642201000}
+  fracturesParent: {fileID: 642201000}
+  arenaCollider: {fileID: 1929596301}
   outerParent: {fileID: 125746002}
   innerParent: {fileID: 500110904}
   outerRing: []
   innerRing: []
-  fractureSpawnDelay: 3.5
+  fractureSpawnDelay: 2
   startDelay: 5
   isFracturing: 0
   spawnPosDebug: {fileID: 2146552552}

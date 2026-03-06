@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4848527804138030288}
+  - component: {fileID: -492810987300588980}
   m_Layer: 0
   m_Name: Fracture Base
   m_TagString: Untagged
@@ -36,6 +37,21 @@ Transform:
   - {fileID: 2731841184473059792}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-492810987300588980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2399743317954188818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 004b4645210e2614aaf77f9f224d1ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  allColliders:
+  - {fileID: 2573622535712655472}
+  - {fileID: 622444811716299538}
 --- !u!1 &5837773592038238327
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +243,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6561657346550881238}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -790,7 +806,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8534100313858342527}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
