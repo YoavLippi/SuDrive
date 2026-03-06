@@ -21,6 +21,9 @@ public class GameController : MonoBehaviour
     public UnityEvent<TrackedPlayer> Win;
     public UnityEvent roundStart;
 
+    [Header("Death Animation")]
+    public DeathAnim deathAnim;
+
     [Serializable]
     public struct TrackedPlayer
     {
@@ -96,6 +99,7 @@ public class GameController : MonoBehaviour
                 var temp = playersArr[i];
                 temp.isDead = true;
                 playersArr[i] = temp;
+                deathAnim.EffectiveDeath();
                 deadPlayers++;
                 break;
             }
@@ -117,6 +121,7 @@ public class GameController : MonoBehaviour
                     else
                     {
                         roundStart.Invoke();
+                        deathAnim.ResetDeathAnim();
                     }
 
                     break;
