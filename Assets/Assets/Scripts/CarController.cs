@@ -32,7 +32,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private float softVelocityCap;
     [SerializeField] private float hardVelocityCap;
     [SerializeField] [Range(0,1f)] private float baseTraction;
-    [FormerlySerializedAs("driftTraction")][SerializeField] [Range(0,1f)] private float driftTractionBack;
+    [SerializeField] [Range(0,1f)] private float driftTractionBack;
     [SerializeField] [Range(0,2f)] private float driftTractionFront;
     
     [Header("Debug")]
