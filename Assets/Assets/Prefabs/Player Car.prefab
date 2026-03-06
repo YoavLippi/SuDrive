@@ -58,7 +58,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f9fbb5768b1c09244b093e4ed3bce0fc, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,18 +112,18 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 0, g: 0, b: 0, a: 0}
+      key0: {r: 1, g: 0.63690513, b: 0.0141509175, a: 1}
+      key1: {r: 0.78039217, g: 0.08248351, b: 0.007843127, a: 1}
+      key2: {r: 0.71377546, g: 0.075442456, b: 0.0071736127, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 0
-      ctime1: 65535
-      ctime2: 0
-      ctime3: 0
+      ctime0: 11758
+      ctime1: 36430
+      ctime2: 58789
+      ctime3: 65535
       ctime4: 0
       ctime5: 0
       ctime6: 0
@@ -137,8 +137,8 @@ TrailRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
-      m_NumColorKeys: 2
+      m_ColorSpace: 0
+      m_NumColorKeys: 4
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0
@@ -721,6 +721,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 6f10b6c6-ea19-43e6-bd90-16462d3df802
     m_ActionName: 'Player/Ability[/Keyboard/ctrl]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fd007bd3-4f1a-4035-adb7-1fe47bfd82ea
+    m_ActionName: 'Player/ToggleInfo[/Keyboard/i,/XInputControllerWindows/buttonNorth]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 08fcd7d1-8c0c-43bb-94db-28ad72a58fc0
+    m_ActionName: 'UI/ToggleInfo[/Keyboard/i,/XInputControllerWindows/buttonNorth]'
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

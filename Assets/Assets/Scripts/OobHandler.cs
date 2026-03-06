@@ -9,6 +9,7 @@ public class OobHandler : MonoBehaviour
 
     [SerializeField] private float requiredSpeed;
     [SerializeField] private float requiredRotationSpeed;
+    [SerializeField] private float minimumBounceForce;
 
     [SerializeField] private ParticleSystem bounceParticles;
     [SerializeField] private ParticleSystem breakParticles;
@@ -51,7 +52,7 @@ public class OobHandler : MonoBehaviour
             {
                 Debug.Log(other.gameObject);
                 
-                rbOther.AddForce(rbOther.linearVelocity*-bounciness/rbOther.mass, ForceMode2D.Impulse);
+                rbOther.AddForce(Mathf.Max((rbOther.linearVelocity*bounciness/rbOther.mass).magnitude, minimumBounceForce) * -rbOther.linearVelocity.normalized, ForceMode2D.Impulse);
                 Instantiate(bounceParticles, contactPoint, rot);
             }
             else

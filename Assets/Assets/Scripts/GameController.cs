@@ -85,6 +85,19 @@ public class GameController : MonoBehaviour
 		}
 	}
 
+	public bool IsPlayerDead(GameObject inPlayer)
+	{
+		foreach (var player in playersArr)
+		{
+			if (player.playerObj == inPlayer)
+			{
+				return player.isDead;
+			}
+		}
+
+		return false;
+	}
+
 	public void KillPlayer(GameObject player)
 	{
 		for (int i = 0; i < playersArr.Count; i++)
