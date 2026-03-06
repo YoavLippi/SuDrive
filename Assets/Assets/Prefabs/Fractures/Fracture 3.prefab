@@ -335,7 +335,7 @@ PrefabInstance:
     - target: {fileID: 2399743317954188818, guid: 5260554081b742741b05164cf2bde4fd, type: 3}
       propertyPath: m_Icon
       value: 
-      objectReference: {fileID: -5938655980376293919, guid: 0000000000000000d000000000000000, type: 0}
+      objectReference: {fileID: 0}
     - target: {fileID: 2399743317954188818, guid: 5260554081b742741b05164cf2bde4fd, type: 3}
       propertyPath: m_Name
       value: Fracture 3

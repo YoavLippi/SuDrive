@@ -841,38 +841,18 @@ MonoBehaviour:
   spawnPointParents: []
   playerPrefab: {fileID: 3434694513921635593, guid: 425112d012dbf964e8e4059e22984e60, type: 3}
   requiredRoundWins: 3
+  _fractureHandler: {fileID: 0}
   deadPlayers: 0
   playerObjArr: []
   Win:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 639283468}
-        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
-        m_MethodName: DoWin
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   roundStart:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 639283468}
-        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
-        m_MethodName: StartRound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  roundEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &639283469
 Transform:
   m_ObjectHideFlags: 0
@@ -2317,6 +2297,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _gameController: {fileID: 0}
+  bounciness: 0
+  requiredSpeed: 0
+  requiredRotationSpeed: 0
+  minimumBounceForce: 0
+  bounceParticles: {fileID: 0}
+  breakParticles: {fileID: 0}
 --- !u!66 &1391104227
 CompositeCollider2D:
   m_ObjectHideFlags: 0
@@ -2594,7 +2580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MetaController
   _manager: {fileID: 1420600422}
-  defaultSpawnPoint: {fileID: 1109046784}
+  defaultSpawnPointParent: {fileID: 0}
   joinedPlayers: []
 --- !u!114 &1420600422
 MonoBehaviour:

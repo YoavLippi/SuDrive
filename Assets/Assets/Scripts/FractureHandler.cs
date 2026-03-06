@@ -10,6 +10,10 @@ public class FractureHandler : MonoBehaviour
     [SerializeField] private GameObject[] fractures;
     [SerializeField] private Transform lookTarget;
     [SerializeField] private Transform arenaParent;
+    [SerializeField] private Transform outerParent;
+    [SerializeField] private Transform innerParent;
+    
+    [Header("Runtime")]
     [SerializeField] private List<Transform> outerRing;
     [SerializeField] private List<Transform> innerRing;
     
@@ -19,10 +23,66 @@ public class FractureHandler : MonoBehaviour
     [SerializeField] private bool isFracturing;
     [SerializeField] private Transform spawnPosDebug;
 
-    private void Start()
+    private IEnumerator fracturing;
+
+    private void Awake()
     {
+        fracturing = DoFractures();
+    }
+
+    public void DoNewRound()
+    {
+        StartCoroutine(NewRound());
+    }
+
+    private IEnumerator NewRound()
+    {
+        StopFracturing();
+        ClearArenaFractures();
+        yield return new WaitForSeconds(startDelay);
+        StartFracturing();
+    }
+
+    public void StopFracturing()
+    {
+        isFracturing = false;
+        StopCoroutine(fracturing);
+    }
+
+    public void ClearArenaFractures()
+    {
+        foreach(var child in arenaParent.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject != arenaParent.gameObject)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    public void StartFracturing()
+    {
+        outerRing.Clear();
+        innerRing.Clear();
+        //populating rings
+        foreach(var child in outerParent.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject != outerParent.gameObject)
+            {
+                outerRing.Add(child.transform);
+            }
+        }
+        
+        foreach(var child in innerParent.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject != innerParent.gameObject)
+            {
+                innerRing.Add(child.transform);
+            }
+        }
+        
         isFracturing = true;
-        StartCoroutine(DoFractures());
+        StartCoroutine(fracturing);
     }
 
     private Quaternion AlignToPosition(Vector2 initial, Transform target)
@@ -54,10 +114,8 @@ public class FractureHandler : MonoBehaviour
 
     private IEnumerator DoFractures()
     {
-        yield return new WaitForSeconds(startDelay);
         while (isFracturing)
         {
-            yield return new WaitForSeconds(fractureSpawnDelay);
             Vector2 initialPos = NextLocation().position;
             Quaternion rot = AlignToPosition(initialPos, lookTarget);
             int fractureIndex = Random.Range(0, 9);
@@ -65,6 +123,7 @@ public class FractureHandler : MonoBehaviour
             float scaleRandomised = Random.Range(0.045f, 0.06f);
             tester.transform.localScale = new Vector3(scaleRandomised,scaleRandomised,scaleRandomised);
             Debug.Log("spawn");
+            yield return new WaitForSeconds(fractureSpawnDelay);
         }
     }
 }

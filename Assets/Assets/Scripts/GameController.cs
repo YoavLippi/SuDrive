@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,6 +13,7 @@ public class GameController : MonoBehaviour
 	[SerializeField] private List<Transform> spawnPointParents;
 	[SerializeField] private GameObject playerPrefab;
 	[SerializeField] private int requiredRoundWins;
+	[SerializeField] private FractureHandler _fractureHandler;
 
 	[Header("Runtime Variables")]
 	[SerializeField] private int deadPlayers;
@@ -20,6 +22,7 @@ public class GameController : MonoBehaviour
 
 	public UnityEvent<TrackedPlayer> Win;
 	public UnityEvent roundStart;
+	public UnityEvent roundEnd;
 
 	[Serializable]
 	public struct TrackedPlayer
@@ -34,7 +37,7 @@ public class GameController : MonoBehaviour
 	{
 		playersArr = new List<TrackedPlayer>();
 		deadPlayers = 0;
-		StartRound();
+		roundStart.Invoke();
 	}
 
 	public void StartRound()
@@ -129,13 +132,20 @@ public class GameController : MonoBehaviour
 					}
 					else
 					{
-						roundStart.Invoke();
+						roundEnd.Invoke();
+						StartCoroutine(NextRound());
 					}
 
 					break;
 				}
 			}
 		}
+	}
+
+	private IEnumerator NextRound()
+	{
+		yield return new WaitForSeconds(3f);
+		roundStart.Invoke();
 	}
 
 	public void DoWin(TrackedPlayer winner)
