@@ -19,11 +19,13 @@ public class GameController : MonoBehaviour
 	[SerializeField] private int deadPlayers;
 
 	[SerializeField] private List<GameObject> playerObjArr;
+    [Header("Death Animation")]
+    public DeathAnim deathAnim;
 
 	public UnityEvent<TrackedPlayer> Win;
 	public UnityEvent roundStart;
 	public UnityEvent roundEnd;
-
+	
 	[Serializable]
 	public struct TrackedPlayer
 	{
