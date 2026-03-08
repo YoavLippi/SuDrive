@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private int playerIndex = 0;
 
 	[SerializeField] private CarSprites[] carSpriteArr;
+
+	[SerializeField] private Image carMaskImage;
+
+	[SerializeField] private Slider abilityCooldownSlider;
 
 	[SerializeField] private Gradient[] trailColorArray;
 
@@ -73,6 +78,7 @@ public class PlayerController : MonoBehaviour
 			currentSprites[2].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelBr;
 			currentSprites[3].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelBl;
 			currentSprites[4].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelFl;
+			carMaskImage.sprite = carSpriteArr[playerIndex].Body;
 		}
 		catch (Exception e)
 		{
@@ -110,5 +116,10 @@ public class PlayerController : MonoBehaviour
 
 		StartCoroutine(ClearActions());
 		_carController.CurrentState = CarController.CarStates.Dead;
+	}
+
+	public void SetCooldownSlider(float val)
+	{
+		abilityCooldownSlider.value = val;
 	}
 }

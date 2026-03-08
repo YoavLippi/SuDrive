@@ -16,6 +16,7 @@ public class AbilityController : MonoBehaviour
         public float duration;
         public float cooldownTime;
         public bool isAvailable = true;
+        public PlayerController _playerController;
         public virtual void Start()
         {
             throw new NotImplementedException("Please use an inherited class");
@@ -33,7 +34,13 @@ public class AbilityController : MonoBehaviour
         public IEnumerator DoCooldown(float time)
         {
             isAvailable = false;
-            yield return new WaitForSeconds(time);
+            float timeElapsed = 0f;
+            do
+            {
+                _playerController.SetCooldownSlider((time-timeElapsed)/time);
+                yield return new WaitForEndOfFrame();
+                timeElapsed += Time.deltaTime;
+            } while (timeElapsed < time);
             isAvailable = true;
         }
     }

@@ -85,7 +85,7 @@ public class PunchAbility : AbilityController.BaseAbility
             Vector2 punchDirection = (collision.gameObject.transform.position - frontPunch.transform.position).normalized;
             //otherRB.linearVelocity += punchDirection * punchForce;
             otherRB.AddForceAtPosition(punchDirection*punchForce, collision.GetContact(0).point, ForceMode2D.Impulse);
-            collision.gameObject.GetComponent<CarController>().GetStunned(0.17f);
+            collision.gameObject.GetComponent<CarController>().GetStunned(0.25f);
             Deactivate(this);
         }
         

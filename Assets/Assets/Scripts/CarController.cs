@@ -203,46 +203,42 @@ public class CarController : MonoBehaviour
     {
         if (!enabled) return;
 
-        if (currentState == CarStates.Actionable)
-        {
-            float rawInputVal = context.ReadValue<float>();;
-            //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
-            currentAcceleration = accelCurve.Evaluate(rawInputVal)* (isBoosting?1.3f:1);
-            softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
-        }
+        if (currentState != CarStates.Actionable) return;
+        
+        float rawInputVal = context.ReadValue<float>();;
+        //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
+        currentAcceleration = accelCurve.Evaluate(rawInputVal)* (isBoosting?1.3f:1);
+        softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
     }
 
     public void OnReverse(InputAction.CallbackContext context)
     {
         if (!enabled) return;
+
+        if (currentState != CarStates.Actionable) return;
         
-        if (currentState == CarStates.Actionable)
-        {
-            float rawInputVal = context.ReadValue<float>();
-            //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
-            currentBreakForce = reverseCurve.Evaluate(rawInputVal);   
-            softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
-        }
+        float rawInputVal = context.ReadValue<float>();
+        //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
+        currentBreakForce = reverseCurve.Evaluate(rawInputVal);   
+        softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
         if (!enabled) return;
-        if (currentState == CarStates.Actionable)
-        {
-            currentMoveDir = context.ReadValue<float>();
-            //currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();   
-        }
+        if (currentState != CarStates.Actionable) return;
+        
+        currentMoveDir = context.ReadValue<float>();
+            //currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();
     }
 
     public void OnBoost(InputAction.CallbackContext context)
     {
         if (!enabled) return;
-        if (currentState == CarStates.Actionable)
-        {
-            isBoosting = context.performed;
-            _trailRenderer.emitting = context.performed;
-        }
+        if (currentState != CarStates.Actionable) return;
+            
+        isBoosting = context.performed;
+        _trailRenderer.emitting = context.performed;
 
         if (context.performed)
         {
@@ -264,26 +260,23 @@ public class CarController : MonoBehaviour
     {
         //targeting only back wheels
         if (!enabled) return;
-        if (currentState == CarStates.Actionable)
+        if (currentState != CarStates.Actionable) return;
+        float newTraction = context.performed ? driftTractionBack : baseTraction;
+
+        allWheels[1].GripFactor = newTraction;
+        allWheels[2].GripFactor = newTraction;
+            
+        float newTractionFront = context.performed ? driftTractionFront : baseTraction;
+            
+        allWheels[0].GripFactor = newTractionFront;
+        allWheels[3].GripFactor = newTractionFront;
+
+        foreach (var wheel in allWheels)
         {
-            float newTraction = context.performed ? driftTractionBack : baseTraction;
-
-            allWheels[1].GripFactor = newTraction;
-            allWheels[2].GripFactor = newTraction;
-            
-            float newTractionFront = context.performed ? driftTractionFront : baseTraction;
-            
-            allWheels[0].GripFactor = newTractionFront;
-            allWheels[3].GripFactor = newTractionFront;
-
-            foreach (var wheel in allWheels)
-            {
-                wheel.SetDrift(context.performed);
-            }
-
-            isDrifting = context.performed;
+            wheel.SetDrift(context.performed);
         }
 
+        isDrifting = context.performed;
         if (tireSquealSource != null)
         {
             if (context.performed) tireSquealSource.Play();
@@ -339,7 +332,7 @@ public class CarController : MonoBehaviour
 
         if (other.gameObject.CompareTag("Player") && isBoosting)
         {
-            other.gameObject.GetComponent<CarController>().GetStunned(0.45f);
+            other.gameObject.GetComponent<CarController>().GetStunned(0.17f);
         }
     }
 
