@@ -140,8 +140,9 @@ public class GameController : MonoBehaviour
 					foundFlag = true;
 					Debug.Log("The object is already in the array");
 					playersArr[j].playerObj.GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
-					playersArr[j].playerController.ClearActions();
-
+					playersArr[j].playerObj.GetComponent<CarController>().ResetActions();
+					playersArr[j].playerController.ClearAnim();
+	
 					var tempT = playersArr[j];
 					tempT.isDead = false;
 					tempT.playerObj.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
@@ -157,7 +158,9 @@ public class GameController : MonoBehaviour
 			playerObjArr[i].GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
 			temp.playerObj = playerObjArr[i];
 			temp.playerController = playerObjArr[i].GetComponent<PlayerController>();
-			temp.playerController.ClearActions();
+			temp.playerController.ClearAnim();
+			temp.playerObj.GetComponent<CarController>().ResetActions();
+			
 			temp.isDead = false;
 			temp.score = 0;
 			playersArr.Add(temp);

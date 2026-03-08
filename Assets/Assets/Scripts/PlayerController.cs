@@ -88,6 +88,11 @@ public class PlayerController : MonoBehaviour
 		playerIndex = playerInput.playerIndex;
 	}
 
+	public void ClearAnim()
+	{
+		_deathAnim.ResetDeathAnim();
+	}
+
 	public IEnumerator ClearActions()
 	{
 		_playerInput.actions.Disable();
