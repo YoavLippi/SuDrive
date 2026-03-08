@@ -34,7 +34,14 @@ public class CarController : MonoBehaviour
     [SerializeField] [Range(0,1f)] private float baseTraction;
     [SerializeField] [Range(0,1f)] private float driftTractionBack;
     [SerializeField] [Range(0,2f)] private float driftTractionFront;
-    
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource engineSource;
+    [SerializeField] private AudioSource tireSquealSource;
+    [SerializeField] private AudioSource collisionSource;
+    [SerializeField] private AudioSource boostIntroSource;
+    [SerializeField] private AudioSource boostLoopSource;
+
     [Header("Debug")]
     [SerializeField] private float currentMoveDir = 0;
     [SerializeField] private float currentAcceleration = 0;
@@ -91,6 +98,12 @@ public class CarController : MonoBehaviour
         abilityController = GetComponent<AbilityController>();
         //going clockwise around the car body, starting at the top right
         allWheels = new List<WheelHandler> { frWheel, brWheel, blWheel, flWheel };
+
+        if (engineSource != null)
+        {
+            engineSource.loop = true;
+            engineSource.Play();
+        }
     }
 
     // Update is called once per frame
@@ -118,6 +131,12 @@ public class CarController : MonoBehaviour
         printDebug();
 
         #endregion
+
+        if (engineSource != null)
+        {
+            // Adjusts pitch between 0.8 and 2.0 based on speed
+            engineSource.pitch = Mathf.Lerp(0.8f, 2.0f, currentSpeed / hardVelocityCap);
+        }
     }
 
     private void DoHardVelocityClamp()
@@ -206,6 +225,21 @@ public class CarController : MonoBehaviour
             isBoosting = context.performed;
             _trailRenderer.emitting = context.performed;
         }
+
+        if (context.performed)
+        {
+            boostIntroSource?.Play();
+            if (boostLoopSource != null)
+            {
+                boostLoopSource.loop = true;
+                boostLoopSource.Play();
+            }
+        }
+        else if (context.canceled)
+        {
+            boostIntroSource?.Stop();
+            boostLoopSource?.Stop();
+        }
     }
 
     public void OnDrift(InputAction.CallbackContext context)
@@ -230,6 +264,12 @@ public class CarController : MonoBehaviour
             }
 
             isDrifting = context.performed;
+        }
+
+        if (tireSquealSource != null)
+        {
+            if (context.performed) tireSquealSource.Play();
+            else if (context.canceled) tireSquealSource.Stop();
         }
     }
     
@@ -273,6 +313,12 @@ public class CarController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (collisionSource != null)
+        {
+            // PlayOneShot so sounds can overlap if multiple hits happen
+            collisionSource.PlayOneShot(collisionSource.clip);
+        }
+
         if (other.gameObject.CompareTag("Player") && isBoosting)
         {
             other.gameObject.GetComponent<CarController>().GetStunned(0.45f);
@@ -288,7 +334,7 @@ public class CarController : MonoBehaviour
             isAbilityOn = context.performed;
             Debug.Log($"Ability button pressed: {isAbilityOn}");
             if (isAbilityOn)
-                abilityController.bumperAbility.Activate(this);
+                abilityController.punchAbility.Activate(this);
         }
     }
 }
