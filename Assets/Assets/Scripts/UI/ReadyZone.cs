@@ -10,6 +10,7 @@ public class ReadyZone : MonoBehaviour
 	public TextMeshProUGUI countdownText;
 
 	[Header("Visuals")]
+	public Color beginColor = Color.indianRed;
 	public Color readyColor = Color.darkSeaGreen;
 
 	[Header("Audio")]
@@ -20,19 +21,19 @@ public class ReadyZone : MonoBehaviour
 	private Color originalColor;
 	private SpriteRenderer sprite;
 	private bool hasPlayedAudio = false;
-	private int lastDisplayedTime = -1;
 	private int playersOnPad = 0;
 	private float timer = 0f;
+
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Start()
 	{
 		sprite = GetComponent<SpriteRenderer>();
 		originalColor = sprite.color;
-				
+
 		//if (countdownText != null) countdownText.text = "";
 		if (metaController == null)
 		{
-			metaController = FindObjectOfType<MetaController>();
+			metaController = FindFirstObjectByType<MetaController>();
 		}
 	}
 
@@ -54,7 +55,7 @@ public class ReadyZone : MonoBehaviour
 			{
 				playersOnPad = 0;
 				timer = 0f;
-				sprite.color = originalColor;
+				sprite.color = beginColor;
 				if (countdownText != null) countdownText.text = "";
 			}
 		}
@@ -67,16 +68,6 @@ public class ReadyZone : MonoBehaviour
 
 		if (totalJoined > 1 && playersOnPad == totalJoined)
 		{
-			if (!hasPlayedAudio)
-			{
-				if (audioSource != null && beepSound != null)
-				{
-					audioSource.clip = beepSound;
-					audioSource.Play();
-				}
-				hasPlayedAudio = true;
-			}
-
 			timer += Time.deltaTime;
 			float remainingTime = Mathf.Max(0, countdownDuration - timer);
 
@@ -84,7 +75,21 @@ public class ReadyZone : MonoBehaviour
 			{
 				if (remainingTime > 0.1f)
 				{
-					countdownText.text = Mathf.CeilToInt(remainingTime).ToString();
+					if (remainingTime > 2)
+					{
+						sprite.color = beginColor;
+						countdownText.text = (remainingTime > 2.5f) ? "GET READY" : "";
+					}
+					else if (remainingTime > 1)
+					{
+						sprite.color = Color.orange;
+						countdownText.text = (remainingTime > 1.5f) ? "GET READY" : "";
+					}
+					else
+					{
+						sprite.color = readyColor;
+						countdownText.text = (remainingTime > 0.5f) ? "GET READY" : "";
+					}
 				}
 				else
 				{
@@ -92,11 +97,11 @@ public class ReadyZone : MonoBehaviour
 				}
 
 				// Pulse effect - code written with help from AI: Gemini
-				float pulse = 1f + (Mathf.PingPong(timer * 2, 0.15f));
-				countdownText.transform.localScale = new Vector3(pulse, pulse, 1);
+				//float pulse = 1f + (Mathf.PingPong(timer * 2, 0.15f));
+				//countdownText.transform.localScale = new Vector3(pulse, pulse, 1);
 			}
 
-			sprite.color = Color.Lerp(originalColor, readyColor, timer / countdownDuration);
+			//sprite.color = Color.Lerp(beginColor, readyColor, timer / countdownDuration);
 
 			if (timer >= countdownDuration + 0.3f)
 			{
@@ -109,13 +114,13 @@ public class ReadyZone : MonoBehaviour
 		}
 	}
 
-	void PlayBeep()
-	{
-		if (audioSource != null && beepSound != null)
-		{
-			audioSource.PlayOneShot(beepSound);
-		}
-	}
+	//void PlayBeep()
+	//{
+	//	if (audioSource != null && beepSound != null)
+	//	{
+	//		audioSource.PlayOneShot(beepSound);
+	//	}
+	//}
 
 	void ResetCountdown()
 	{

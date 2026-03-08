@@ -1,9 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class GameController : MonoBehaviour
 {
@@ -16,8 +16,18 @@ public class GameController : MonoBehaviour
 	[Header("Runtime Variables")]
 	[SerializeField] private int deadPlayers;
 
+	[Header("Round Starter")]
+	[SerializeField] public TextMeshProUGUI roundStartText;
+
+	[Header("Audio")]
+	public AudioSource audioSource;
+	public AudioClip beepSound;
+
 	[SerializeField] private List<GameObject> playerObjArr;
 
+	private float timer = 0f;
+	private float countdownDuration = 3f;
+	private bool hasPlayedAudio = false;
 	public UnityEvent<TrackedPlayer> Win;
 	public UnityEvent roundStart;
 
@@ -32,9 +42,55 @@ public class GameController : MonoBehaviour
 
 	void Start()
 	{
-		playersArr = new List<TrackedPlayer>();
+		timer = 0;
 		deadPlayers = 0;
-		StartRound();
+		hasPlayedAudio = false;
+		playersArr = new List<TrackedPlayer>();
+
+		StartCoroutine(CountdownRoutine(StartRound));
+	}
+
+	private IEnumerator CountdownRoutine(System.Action onFinished)
+	{
+		if (!hasPlayedAudio)
+		{
+			if (audioSource != null && beepSound != null)
+			{
+				audioSource.clip = beepSound;
+				audioSource.Play();
+			}
+
+			hasPlayedAudio = true;
+		}
+
+		//Countdown
+		bool showCountDown = true;
+		while (showCountDown)
+		{
+			timer += Time.deltaTime;
+			float remainingTime = Mathf.Max(0, countdownDuration - timer);
+
+			// Update the text with the remaining seconds
+			if (roundStartText != null) { roundStartText.text = Mathf.CeilToInt(remainingTime).ToString(); }
+
+			// Wait for exactly one frame before continuing the loop
+			yield return null;
+
+			showCountDown = remainingTime > 0;
+		}
+
+		// After the loop finishes...
+		if (roundStartText != null) { roundStartText.text = "START!"; }
+
+		onFinished?.Invoke();
+
+		// After the loop finishes...
+		if (roundStartText != null)
+		{
+			// Delay for 0.6 seconds safely!
+			yield return new WaitForSeconds(0.6f);
+			roundStartText.text = " ";
+		}
 	}
 
 	public void StartRound()
@@ -53,8 +109,7 @@ public class GameController : MonoBehaviour
 				{
 					foundFlag = true;
 					Debug.Log("The object is already in the array");
-					playersArr[j].playerObj
-							.GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
+					playersArr[j].playerObj.GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
 
 					var tempT = playersArr[j];
 					tempT.isDead = false;
@@ -64,6 +119,7 @@ public class GameController : MonoBehaviour
 					break;
 				}
 			}
+
 			if (foundFlag) continue;
 
 			TrackedPlayer temp = new TrackedPlayer();
@@ -75,8 +131,6 @@ public class GameController : MonoBehaviour
 			playersArr.Add(temp);
 		}
 
-		//starting round
-		//TODO: Countdown
 		int correspondingIndex = playersArr.Count - 1;
 		for (int i = 0; i < playersArr.Count; i++)
 		{
@@ -89,10 +143,7 @@ public class GameController : MonoBehaviour
 	{
 		foreach (var player in playersArr)
 		{
-			if (player.playerObj == inPlayer)
-			{
-				return player.isDead;
-			}
+			if (player.playerObj == inPlayer) { return player.isDead; }
 		}
 
 		return false;
@@ -102,6 +153,7 @@ public class GameController : MonoBehaviour
 	{
 		for (int i = 0; i < playersArr.Count; i++)
 		{
+			Debug.Log($"Comparing {playersArr[i].playerObj.name} with {player.name}");
 			if (playersArr[i].playerObj == player)
 			{
 				playersArr[i].playerController.DoDeath();
@@ -123,6 +175,7 @@ public class GameController : MonoBehaviour
 					var temp = playersArr[i];
 					temp.score++;
 					playersArr[i] = temp;
+
 					if (temp.score == requiredRoundWins)
 					{
 						Win.Invoke(playersArr[i]);

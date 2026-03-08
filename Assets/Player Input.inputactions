@@ -303,7 +303,7 @@
                 {
                     "name": "",
                     "id": "a4c776cb-5ab9-4ec4-92d1-8e47113d7e2f",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -839,7 +839,7 @@
                 {
                     "name": "",
                     "id": "c6ccd6e0-5879-4557-9d39-c102a6972c0d",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
