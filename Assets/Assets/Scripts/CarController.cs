@@ -80,7 +80,7 @@ public class CarController : MonoBehaviour
         Stunned,
         Dead
     }
-    private AbilityController abilityController;
+    [SerializeField] private AbilityController.BaseAbility abilityController;
 
     private void OnEnable()
     {
@@ -95,9 +95,9 @@ public class CarController : MonoBehaviour
     void Start()
     {
         carBody = GetComponent<Rigidbody2D>();
-        abilityController = GetComponent<AbilityController>();
         //going clockwise around the car body, starting at the top right
         allWheels = new List<WheelHandler> { frWheel, brWheel, blWheel, flWheel };
+        abilityController = GetComponent<AbilityController.BaseAbility>();
 
         if (engineSource != null)
         {
@@ -296,7 +296,7 @@ public class CarController : MonoBehaviour
     /// Coroutine for stunning the car
     /// </summary>
     /// <param name="stunTime">The amount of time, in seconds, to stun the car</param>
-    public IEnumerator DoStun(float stunTime)
+    private IEnumerator DoStun(float stunTime)
     {
         foreach (var wheel in allWheels)
         {
@@ -352,7 +352,7 @@ public class CarController : MonoBehaviour
             isAbilityOn = context.performed;
             Debug.Log($"Ability button pressed: {isAbilityOn}");
             if (isAbilityOn)
-                abilityController.punchAbility.Activate(this);
+                abilityController.Activate(this, _playerInput.playerIndex);
         }
     }
 }

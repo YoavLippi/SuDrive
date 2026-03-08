@@ -12,13 +12,15 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] private GameObject[] currentSprites;
 
-	private int playerIndex = 0;
+	[SerializeField] private int playerIndex = 0;
 
 	[SerializeField] private CarSprites[] carSpriteArr;
 
 	[SerializeField] private Gradient[] trailColorArray;
 
 	[SerializeField] private DeathAnim _deathAnim;
+
+	public int PlayerIndex => playerIndex;
 
 	[Serializable]
 	public struct CarSprites
