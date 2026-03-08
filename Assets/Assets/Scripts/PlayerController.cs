@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private CarSprites[] carSpriteArr;
 
 	[SerializeField] private Gradient[] trailColorArray;
+
+	[SerializeField] private DeathAnim _deathAnim;
 
 	[Serializable]
 	public struct CarSprites
@@ -85,13 +88,20 @@ public class PlayerController : MonoBehaviour
 		playerIndex = playerInput.playerIndex;
 	}
 
+	public IEnumerator ClearActions()
+	{
+		_playerInput.actions.Disable();
+		//Disabling and re-enabling the input should clear all of the inputs
+		yield return new WaitForEndOfFrame();
+		_playerInput.actions.Enable();
+	}
+
 	public void DoDeath()
 	{
 		//TODO: play a death animation
+		_deathAnim.EffectiveDeath();
 
-		//Disabling and re-enabling the input should clear all of the inputs
-		_playerInput.actions.Disable();
-		_playerInput.actions.Enable();
+		StartCoroutine(ClearActions());
 		_carController.CurrentState = CarController.CarStates.Dead;
 	}
 }

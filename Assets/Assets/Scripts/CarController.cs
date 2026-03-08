@@ -93,6 +93,24 @@ public class CarController : MonoBehaviour
         allWheels = new List<WheelHandler> { frWheel, brWheel, blWheel, flWheel };
     }
 
+    public void ResetActions()
+    {
+        currentAcceleration = 0;
+        currentBreakForce = 0;
+        isDrifting = false;
+        foreach (var wheel in allWheels)
+        {
+            wheel.GripFactor = 1f;
+            wheel.SetDrift(false);
+        }
+
+        currentMoveDir = 0;
+        softVelocityCap = 0;
+
+        GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+        GetComponent<Rigidbody2D>().angularVelocity = 0;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
