@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,11 +13,19 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] private GameObject[] currentSprites;
 
-	private int playerIndex = 0;
+	[SerializeField] private int playerIndex = 0;
 
 	[SerializeField] private CarSprites[] carSpriteArr;
 
+	[SerializeField] private Image carMaskImage;
+
+	[SerializeField] private Slider abilityCooldownSlider;
+
 	[SerializeField] private Gradient[] trailColorArray;
+
+	[SerializeField] private DeathAnim _deathAnim;
+
+	public int PlayerIndex => playerIndex;
 
 	[Serializable]
 	public struct CarSprites
@@ -68,6 +78,7 @@ public class PlayerController : MonoBehaviour
 			currentSprites[2].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelBr;
 			currentSprites[3].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelBl;
 			currentSprites[4].GetComponent<SpriteRenderer>().sprite = carSpriteArr[playerIndex].WheelFl;
+			carMaskImage.sprite = carSpriteArr[playerIndex].Body;
 		}
 		catch (Exception e)
 		{
@@ -85,13 +96,30 @@ public class PlayerController : MonoBehaviour
 		playerIndex = playerInput.playerIndex;
 	}
 
+	public void ClearAnim()
+	{
+		_deathAnim.ResetDeathAnim();
+	}
+
+	public IEnumerator ClearActions()
+	{
+		_playerInput.actions.Disable();
+		//Disabling and re-enabling the input should clear all of the inputs
+		yield return new WaitForEndOfFrame();
+		_playerInput.actions.Enable();
+	}
+
 	public void DoDeath()
 	{
 		//TODO: play a death animation
+		_deathAnim.EffectiveDeath();
 
-		//Disabling and re-enabling the input should clear all of the inputs
-		_playerInput.actions.Disable();
-		_playerInput.actions.Enable();
+		StartCoroutine(ClearActions());
 		_carController.CurrentState = CarController.CarStates.Dead;
+	}
+
+	public void SetCooldownSlider(float val)
+	{
+		abilityCooldownSlider.value = val;
 	}
 }

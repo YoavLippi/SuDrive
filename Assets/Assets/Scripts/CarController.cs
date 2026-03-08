@@ -34,7 +34,14 @@ public class CarController : MonoBehaviour
     [SerializeField] [Range(0,1f)] private float baseTraction;
     [SerializeField] [Range(0,1f)] private float driftTractionBack;
     [SerializeField] [Range(0,2f)] private float driftTractionFront;
-    
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource engineSource;
+    [SerializeField] private AudioSource tireSquealSource;
+    [SerializeField] private AudioSource collisionSource;
+    [SerializeField] private AudioSource boostIntroSource;
+    [SerializeField] private AudioSource boostLoopSource;
+
     [Header("Debug")]
     [SerializeField] private float currentMoveDir = 0;
     [SerializeField] private float currentAcceleration = 0;
@@ -73,7 +80,7 @@ public class CarController : MonoBehaviour
         Stunned,
         Dead
     }
-    private AbilityController abilityController;
+    [SerializeField] private AbilityController.BaseAbility abilityController;
 
     private void OnEnable()
     {
@@ -88,9 +95,33 @@ public class CarController : MonoBehaviour
     void Start()
     {
         carBody = GetComponent<Rigidbody2D>();
-        abilityController = GetComponent<AbilityController>();
         //going clockwise around the car body, starting at the top right
         allWheels = new List<WheelHandler> { frWheel, brWheel, blWheel, flWheel };
+        abilityController = GetComponent<AbilityController.BaseAbility>();
+
+        if (engineSource != null)
+        {
+            engineSource.loop = true;
+            engineSource.Play();
+        }
+    }
+
+    public void ResetActions()
+    {
+        currentAcceleration = 0;
+        currentBreakForce = 0;
+        isDrifting = false;
+        foreach (var wheel in allWheels)
+        {
+            wheel.GripFactor = 1f;
+            wheel.SetDrift(false);
+        }
+
+        currentMoveDir = 0;
+        softVelocityCap = 0;
+
+        GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+        GetComponent<Rigidbody2D>().angularVelocity = 0;
     }
 
     // Update is called once per frame
@@ -118,6 +149,12 @@ public class CarController : MonoBehaviour
         printDebug();
 
         #endregion
+
+        if (engineSource != null)
+        {
+            // Adjusts pitch between 0.8 and 2.0 based on speed
+            engineSource.pitch = Mathf.Lerp(0.8f, 2.0f, currentSpeed / hardVelocityCap);
+        }
     }
 
     private void DoHardVelocityClamp()
@@ -166,45 +203,56 @@ public class CarController : MonoBehaviour
     {
         if (!enabled) return;
 
-        if (currentState == CarStates.Actionable)
-        {
-            float rawInputVal = context.ReadValue<float>();;
-            //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
-            currentAcceleration = accelCurve.Evaluate(rawInputVal)* (isBoosting?1.3f:1);
-            softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
-        }
+        if (currentState != CarStates.Actionable) return;
+        
+        float rawInputVal = context.ReadValue<float>();;
+        //if (debugText) debugText.text = $"Drive with val of {rawInputVal}";
+        currentAcceleration = accelCurve.Evaluate(rawInputVal)* (isBoosting?1.3f:1);
+        softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
     }
 
     public void OnReverse(InputAction.CallbackContext context)
     {
         if (!enabled) return;
+
+        if (currentState != CarStates.Actionable) return;
         
-        if (currentState == CarStates.Actionable)
-        {
-            float rawInputVal = context.ReadValue<float>();
-            //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
-            currentBreakForce = reverseCurve.Evaluate(rawInputVal);   
-            softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
-        }
+        float rawInputVal = context.ReadValue<float>();
+        //if (debugText) debugText.text = $"Reverse with val of {rawInputVal}";
+        currentBreakForce = reverseCurve.Evaluate(rawInputVal);   
+        softVelocityCap = softVelocityCurve.Evaluate(rawInputVal);
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
         if (!enabled) return;
-        if (currentState == CarStates.Actionable)
-        {
-            currentMoveDir = context.ReadValue<float>();
-            //currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();   
-        }
+        if (currentState != CarStates.Actionable) return;
+        
+        currentMoveDir = context.ReadValue<float>();
+            //currentMoveDir = _playerInput.actions.FindAction("Move").ReadValue<Vector2>();
     }
 
     public void OnBoost(InputAction.CallbackContext context)
     {
         if (!enabled) return;
-        if (currentState == CarStates.Actionable)
+        if (currentState != CarStates.Actionable) return;
+            
+        isBoosting = context.performed;
+        _trailRenderer.emitting = context.performed;
+
+        if (context.performed)
         {
-            isBoosting = context.performed;
-            _trailRenderer.emitting = context.performed;
+            boostIntroSource?.Play();
+            if (boostLoopSource != null)
+            {
+                boostLoopSource.loop = true;
+                boostLoopSource.Play();
+            }
+        }
+        else if (context.canceled)
+        {
+            boostIntroSource?.Stop();
+            boostLoopSource?.Stop();
         }
     }
 
@@ -212,24 +260,27 @@ public class CarController : MonoBehaviour
     {
         //targeting only back wheels
         if (!enabled) return;
-        if (currentState == CarStates.Actionable)
+        if (currentState != CarStates.Actionable) return;
+        float newTraction = context.performed ? driftTractionBack : baseTraction;
+
+        allWheels[1].GripFactor = newTraction;
+        allWheels[2].GripFactor = newTraction;
+            
+        float newTractionFront = context.performed ? driftTractionFront : baseTraction;
+            
+        allWheels[0].GripFactor = newTractionFront;
+        allWheels[3].GripFactor = newTractionFront;
+
+        foreach (var wheel in allWheels)
         {
-            float newTraction = context.performed ? driftTractionBack : baseTraction;
+            wheel.SetDrift(context.performed);
+        }
 
-            allWheels[1].GripFactor = newTraction;
-            allWheels[2].GripFactor = newTraction;
-            
-            float newTractionFront = context.performed ? driftTractionFront : baseTraction;
-            
-            allWheels[0].GripFactor = newTractionFront;
-            allWheels[3].GripFactor = newTractionFront;
-
-            foreach (var wheel in allWheels)
-            {
-                wheel.SetDrift(context.performed);
-            }
-
-            isDrifting = context.performed;
+        isDrifting = context.performed;
+        if (tireSquealSource != null)
+        {
+            if (context.performed) tireSquealSource.Play();
+            else if (context.canceled) tireSquealSource.Stop();
         }
     }
     
@@ -238,7 +289,7 @@ public class CarController : MonoBehaviour
     /// Coroutine for stunning the car
     /// </summary>
     /// <param name="stunTime">The amount of time, in seconds, to stun the car</param>
-    public IEnumerator DoStun(float stunTime)
+    private IEnumerator DoStun(float stunTime)
     {
         foreach (var wheel in allWheels)
         {
@@ -273,9 +324,15 @@ public class CarController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (collisionSource != null)
+        {
+            // PlayOneShot so sounds can overlap if multiple hits happen
+            collisionSource.PlayOneShot(collisionSource.clip);
+        }
+
         if (other.gameObject.CompareTag("Player") && isBoosting)
         {
-            other.gameObject.GetComponent<CarController>().GetStunned(0.45f);
+            other.gameObject.GetComponent<CarController>().GetStunned(0.17f);
         }
     }
 
@@ -288,7 +345,7 @@ public class CarController : MonoBehaviour
             isAbilityOn = context.performed;
             Debug.Log($"Ability button pressed: {isAbilityOn}");
             if (isAbilityOn)
-                abilityController.bumperAbility.Activate(this);
+                abilityController.Activate(this, _playerInput.playerIndex);
         }
     }
 }

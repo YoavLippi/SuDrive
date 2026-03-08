@@ -8,20 +8,26 @@ public class DeathAnim : MonoBehaviour
     [Header("References")]
     public Animator deathAnim;
     public ParticleSystem smokeEffect;
+    public Vector3 baseScale;
 
 
     void Start()
     {
         //when the game starts, smoke mustnt play ofc
-       smokeEffect.Stop();    
+       smokeEffect.Stop();
+       deathAnim.enabled = false; //disable the animator at the beginning so that it doesnt mess with the player's mf MOVEMENT
         //if this don't work imma try and reference this as gameObjects and use setActive
+        baseScale = transform.localScale;
     }
 
  
     public void EffectiveDeath ()
     {
         //when the player dies, call this script in the main script where death takes place so that the animation and particle effect play at the right time.
-        deathAnim.SetTrigger("Die");//dear God i hope this is right LOL. 
+        //first lets enable the animator again
+        Debug.Log("TTTTTTTTTTTTTTT");
+        deathAnim.enabled = true;
+        //deathAnim.SetTrigger("Die");//dear God i hope this is right LOL. 
         //turning on the animation trigger so that the death animation triggers....yeah.
 
         smokeEffect.Play();
@@ -30,8 +36,12 @@ public class DeathAnim : MonoBehaviour
     //realised we might need a reset animation and particle effect when the players respawn for the next round
     public void ResetDeathAnim ()
     {
-        deathAnim.Play("IdleNormalAnim");//hope this is right LOL. 
+        //deathAnim.Play("IdleAnimation");//hope this is right LOL.
+        deathAnim.ResetControllerState();
+        deathAnim.enabled = false;
         smokeEffect.Stop();
+        smokeEffect.Clear();
+        transform.localScale = baseScale;
     }
 
 }
