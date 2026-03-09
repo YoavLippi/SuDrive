@@ -23,6 +23,9 @@ public class GameController : MonoBehaviour
 	[Header("Round Tracking")]
 	[SerializeField] private int currentRound = 1;
 
+	[Header("Scoreboard UI")]
+	[SerializeField] private List<TMPro.TextMeshProUGUI> playerTallyTexts;
+
 	[Header("Audio")]
 	public AudioSource audioSource;
 	public AudioClip beepSound;
@@ -127,6 +130,8 @@ public class GameController : MonoBehaviour
 			playersArr[i].playerObj.transform.position = spawnPointParents[correspondingIndex].GetChild(i).position;
 			playersArr[i].playerObj.transform.rotation = spawnPointParents[correspondingIndex].GetChild(i).rotation;
 		}
+
+		UpdateScoreboard();
 	}
 
 	public void StartRound()
@@ -217,6 +222,8 @@ public class GameController : MonoBehaviour
 					temp.score++;
 					playersArr[i] = temp;
 
+					UpdateScoreboard();
+
 					if (temp.score == requiredRoundWins)
 					{
 						Win.Invoke(playersArr[i]);
@@ -245,5 +252,27 @@ public class GameController : MonoBehaviour
 	{
 		Debug.Log($"{winner.playerObj.name} is the winner");
 		//TODO: boot to main menu or go to win scene
+	}
+
+	public void UpdateScoreboard()
+	{
+		// Loop through our tracked players and update their specific text
+		for (int i = 0; i < playersArr.Count; i++)
+		{
+			if (i < playerTallyTexts.Count)
+			{
+				// Set the text to "Player [Number]: [Score]"
+				// We use (i + 1) because the list index starts at 0
+				playerTallyTexts[i].text = "Player " + (i + 1) + ": " + playersArr[i].score.ToString();
+
+				playerTallyTexts[i].gameObject.SetActive(true);
+			}
+		}
+
+		// Hide the slots for players who aren't in the match
+		for (int i = playersArr.Count; i < playerTallyTexts.Count; i++)
+		{
+			playerTallyTexts[i].gameObject.SetActive(false);
+		}
 	}
 }
