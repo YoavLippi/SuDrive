@@ -166,9 +166,23 @@ public class FractureHandler : MonoBehaviour
             for (int i = 0; i < 3; i++)
             {
                 yield return new WaitForSeconds(flashTime);
-                newFracture.SetActive(false);
+                try
+                {
+                    newFracture.SetActive(false);
+                }
+                catch (MissingReferenceException e)
+                {
+                    yield break;
+                }
                 yield return new WaitForSeconds(flashTime);
-                newFracture.SetActive(true);
+                try
+                {
+                    newFracture.SetActive(true);   
+                }
+                catch (MissingReferenceException e)
+                {
+                    yield break;
+                }
             }
             newFracture.GetComponent<IndividualFractureHandler>().SetCollidersActive(true);
             
