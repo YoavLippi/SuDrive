@@ -20,6 +20,9 @@ public class GameController : MonoBehaviour
 	[Header("Round Starter")]
 	[SerializeField] public TextMeshProUGUI roundStartText;
 
+	[Header("Round Tracking")]
+	[SerializeField] private int currentRound = 1;
+
 	[Header("Audio")]
 	public AudioSource audioSource;
 	public AudioClip beepSound;
@@ -55,6 +58,15 @@ public class GameController : MonoBehaviour
 
 	private IEnumerator CountdownRoutine()
 	{
+		if (roundStartText != null)
+		{
+			roundStartText.text = "ROUND " + currentRound;
+		}
+
+		// Brief pause so players can read the round number
+		yield return new WaitForSeconds(1.5f);
+
+		// 2. Play Audio once at the start of the numeric countdown
 		if (!hasPlayedAudio)
 		{
 			if (audioSource != null && beepSound != null)
@@ -62,39 +74,33 @@ public class GameController : MonoBehaviour
 				audioSource.clip = beepSound;
 				audioSource.Play();
 			}
-
 			hasPlayedAudio = true;
 		}
 
+		// 3. Start Numeric Countdown
 		float timer = 0f;
-		//Countdown
-		bool showCountDown = true;
-		while (showCountDown)
+		while (timer < countdownDuration)
 		{
 			timer += Time.deltaTime;
 			float remainingTime = Mathf.Max(0, countdownDuration - timer);
 
-			// Update the text with the remaining seconds
-			if (roundStartText != null) { roundStartText.text = Mathf.CeilToInt(remainingTime).ToString(); }
+			if (roundStartText != null)
+			{
+				roundStartText.text = Mathf.CeilToInt(remainingTime).ToString();
+			}
 
-			// Wait for exactly one frame before continuing the loop
 			yield return new WaitForEndOfFrame();
-
-			showCountDown = remainingTime > 0;
 		}
 
-		// After the loop finishes...
+		// 4. Start Sequence
 		if (roundStartText != null) { roundStartText.text = "START!"; }
 
-		//onFinished?.Invoke();
+		// Execute StartRound logic here to enable players
+		StartRound();
 
-		// After the loop finishes...
-		if (roundStartText != null)
-		{
-			// Delay for 0.6 seconds safely!
-			yield return new WaitForSeconds(0.6f);
-			roundStartText.text = " ";
-		}
+		// 5. Cleanup
+		yield return new WaitForSeconds(0.6f);
+		if (roundStartText != null) { roundStartText.text = " "; }
 	}
 
 	//Messy, but it should work until we need to refactor it much later
@@ -217,6 +223,7 @@ public class GameController : MonoBehaviour
 					}
 					else
 					{
+						currentRound++;
 						roundEnd.Invoke();
 						StartCoroutine(NextRound());
 					}
