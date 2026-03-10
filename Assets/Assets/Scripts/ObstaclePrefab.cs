@@ -5,7 +5,7 @@ public class ObstaclePrefab : MonoBehaviour
    public enum ObstacleType
     {
         Bounce,
-        Kill,
+        // Kill,
         SpeedControl
     }
 
@@ -17,22 +17,22 @@ public class ObstaclePrefab : MonoBehaviour
     [SerializeField] float bounciness = 1.5f;
     [SerializeField] float minBounceForce = 3f;
 
-    GameController _gameController;
+    //GameController _gameController;
 
     [SerializeField] private ParticleSystem bounceParticles;
     [SerializeField] private ParticleSystem breakParticles;
 
     void Start()
     {
-        _gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
+       // _gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.gameObject.CompareTag("Player")) return;
 
-        Rigidbody2D rbOther = other.transform.parent.gameObject.GetComponent<Rigidbody2D>();
-        if (rbOther != null) return;
+        Rigidbody2D rbOther = other.gameObject.GetComponent<Rigidbody2D>();
+        if (rbOther == null) return; // forgot a "="
 
         Vector2 contactPoint = GetContactPoint(other);
         Quaternion contactRotation = GetContactRotation(contactPoint, other.transform.position);
@@ -43,9 +43,9 @@ public class ObstaclePrefab : MonoBehaviour
                 BouncePlayer(rbOther, contactPoint, contactRotation);
                 break;
 
-            case ObstacleType.Kill:
-                KillPlayer(other, contactPoint, contactRotation);
-                break;
+           // case ObstacleType.Kill:
+              //  KillPlayer(other, contactPoint, contactRotation);
+               // break;
 
             case ObstacleType.SpeedControl:
                 bool isFast = rbOther.linearVelocity.magnitude >= neededSpeed
@@ -53,9 +53,9 @@ public class ObstaclePrefab : MonoBehaviour
 
                 if (isFast)
                 
-                    KillPlayer(other, contactPoint, contactRotation);
+                    //KillPlayer(other, contactPoint, contactRotation);
 
-                    else
+                    //else
                         BouncePlayer(rbOther, contactPoint, contactRotation);
                     break;
                 
@@ -71,17 +71,17 @@ public class ObstaclePrefab : MonoBehaviour
                 Instantiate(bounceParticles, contactPoint, rot);
         }
 
-        void KillPlayer(Collider2D other, Vector2 contactPoint, Quaternion rot)
-        {
-            if (breakParticles !=null)
-                Instantiate(breakParticles, contactPoint, rot);
+       // void KillPlayer(Collider2D other, Vector2 contactPoint, Quaternion rot)
+       // {
+         //   if (breakParticles !=null)
+              //  Instantiate(breakParticles, contactPoint, rot);
 
-            if (_gameController != null)
-                _gameController.KillPlayer(other.transform.parent.gameObject);
+           //if (_gameController != null)
+               //_gameController.KillPlayer(other.gameObject);
 
-            else
-                Debug.LogWarning("[ObstaclePrefab] KillPlayer called but no GameController assigned.");
-        }
+        //    else
+        //        Debug.LogWarning("[ObstaclePrefab] KillPlayer called but no GameController assigned.");
+       // }
 
         Vector2 GetContactPoint (Collider2D other)
         {
