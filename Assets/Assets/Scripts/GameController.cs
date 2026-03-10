@@ -310,7 +310,7 @@ public class GameController : MonoBehaviour
 			{
 				// Set the text to "Player [Number]: [Score]"
 				// We use (i + 1) because the list index starts at 0
-				playerTallyTexts[i].text = "Player " + (i + 1) + ": " + playersArr[i].score.ToString();
+				playerTallyTexts[i].text = "PL " + (i + 1) + ": " + playersArr[i].score.ToString();
 
 				playerTallyTexts[i].gameObject.SetActive(true);
 			}
