@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,7 +18,10 @@ public class PunchAbility : AbilityController.BaseAbility
         private GameObject frontPunch;
         
         public float punchForce = 50f;
+        public float stunTime = 0.25f;
         public Sprite[] punchSprites;
+
+        private IEnumerator delayRoutine;
         
         // moved to above
 
@@ -56,7 +61,8 @@ public class PunchAbility : AbilityController.BaseAbility
 
             Debug.Log($"Bump Made: bounciness = {carMaterial.bounciness}");
             // Start a coroutine to deactivate the ability after the duration
-            StartCoroutine(DeactivateAfterDelay(owner)); // FIGURE OUT WHY THIS ISN'T WORKING; it was a non-static method issue
+            delayRoutine = DeactivateAfterDelay(owner);
+            StartCoroutine(delayRoutine); // FIGURE OUT WHY THIS ISN'T WORKING; it was a non-static method issue
         }
         public override void Deactivate(MonoBehaviour owner)
         {
@@ -85,7 +91,8 @@ public class PunchAbility : AbilityController.BaseAbility
             Vector2 punchDirection = (collision.gameObject.transform.position - frontPunch.transform.position).normalized;
             //otherRB.linearVelocity += punchDirection * punchForce;
             otherRB.AddForceAtPosition(punchDirection*punchForce, collision.GetContact(0).point, ForceMode2D.Impulse);
-            collision.gameObject.GetComponent<CarController>().GetStunned(0.25f);
+            collision.gameObject.GetComponent<CarController>().GetStunned(stunTime);
+            StopCoroutine(delayRoutine);
             Deactivate(this);
         }
         

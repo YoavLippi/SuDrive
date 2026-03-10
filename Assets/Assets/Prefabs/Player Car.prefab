@@ -10913,7 +10913,8 @@ MonoBehaviour:
   punchSpawnOffset: {x: 0, y: 8}
   isActive: 0
   carMaterial: {fileID: 6200000, guid: eccaf62d3d5e86b4f8cbe87663d776b6, type: 2}
-  punchForce: 40
+  punchForce: 50
+  stunTime: 0.3
   punchSprites:
   - {fileID: 21300000, guid: b4d12faea0aff4f43afc111ee4d8af0a, type: 3}
   - {fileID: 21300000, guid: cafe3c40da26d314e8c8351c02fd01f8, type: 3}
