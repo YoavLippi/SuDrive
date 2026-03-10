@@ -7909,6 +7909,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 955177241}
   m_CullTransparentMesh: 1
+--- !u!1 &931426096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 931426098}
+  - component: {fileID: 931426097}
+  m_Layer: 0
+  m_Name: ObstacleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &931426097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931426096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 124763a24e42ec642a42fa037d6d444a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstacleHandler
+  obstaclePrefabs:
+  - {fileID: 8172348186466296239, guid: 65335556a1c9d8e4ea23b0d1b0cc25cd, type: 3}
+  spawnInterval: 2
+  spawnIntervalSpacing: 0.5
+  spawnAreaPoint: {x: 0, y: 0}
+  spawnAreaOuter: {x: 55, y: 30}
+  spawnOnStart: 1
+  maxObstaclesSpawned: 10
+  _timer: 2
+  _nextSpawnTime: 6
+--- !u!4 &931426098
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931426096}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 55.13234, y: -23.91681, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1006959153
 GameObject:
   m_ObjectHideFlags: 0
@@ -17778,3 +17832,4 @@ SceneRoots:
   - {fileID: 800235156}
   - {fileID: 2146552552}
   - {fileID: 1787051514}
+  - {fileID: 931426098}
