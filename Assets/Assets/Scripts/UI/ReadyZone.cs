@@ -13,9 +13,14 @@ public class ReadyZone : MonoBehaviour
 	public Color beginColor = Color.indianRed;
 	public Color readyColor = Color.darkSeaGreen;
 
-	[Header("Audio")]
-	public AudioSource audioSource;
-	public AudioClip beepSound;
+	//[Header("Audio")]
+	//public AudioSource audioSource;
+	//public AudioClip beepSound;
+
+	[Header("Animations")]
+	[SerializeField] private float jumpSpeed = 5f;
+	[SerializeField] private float jumpHeight = 10f;
+	private Vector3 initialTextPosition;
 
 	// original colour of start button - EB391E
 	private Color originalColor;
@@ -35,6 +40,11 @@ public class ReadyZone : MonoBehaviour
 		{
 			metaController = FindFirstObjectByType<MetaController>();
 		}
+
+		if (countdownText != null)
+		{
+			initialTextPosition = countdownText.transform.localPosition;
+		}
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -51,13 +61,9 @@ public class ReadyZone : MonoBehaviour
 		{
 			playersOnPad--;
 
-			if (playersOnPad <= 0)
-			{
-				playersOnPad = 0;
-				timer = 0f;
-				sprite.color = beginColor;
-				if (countdownText != null) countdownText.text = "";
-			}
+			if (playersOnPad < 0) playersOnPad = 0;
+						
+			ResetCountdown();
 		}
 	}
 
@@ -68,11 +74,13 @@ public class ReadyZone : MonoBehaviour
 
 		if (totalJoined > 1 && playersOnPad == totalJoined)
 		{
+			countdownText.color = Color.white;
 			timer += Time.deltaTime;
 			float remainingTime = Mathf.Max(0, countdownDuration - timer);
 
 			if (countdownText != null)
 			{
+				countdownText.transform.localPosition = initialTextPosition;
 				if (remainingTime > 0.1f)
 				{
 					if (remainingTime > 2)
@@ -95,13 +103,7 @@ public class ReadyZone : MonoBehaviour
 				{
 					countdownText.text = "START!";
 				}
-
-				// Pulse effect - code written with help from AI: Gemini
-				//float pulse = 1f + (Mathf.PingPong(timer * 2, 0.15f));
-				//countdownText.transform.localScale = new Vector3(pulse, pulse, 1);
 			}
-
-			//sprite.color = Color.Lerp(beginColor, readyColor, timer / countdownDuration);
 
 			if (timer >= countdownDuration + 0.3f)
 			{
@@ -111,7 +113,14 @@ public class ReadyZone : MonoBehaviour
 		else
 		{
 			ResetCountdown();
+
+			if (countdownText != null)
+			{
+				float newY = initialTextPosition.y + (Mathf.Sin(Time.time * jumpSpeed) * jumpHeight);
+				countdownText.transform.localPosition = new Vector3(initialTextPosition.x, newY, initialTextPosition.z);
+			}
 		}
+		
 	}
 
 	//void PlayBeep()
@@ -125,22 +134,24 @@ public class ReadyZone : MonoBehaviour
 	void ResetCountdown()
 	{
 		timer = 0f;
-
-		if (hasPlayedAudio)
-		{
-			if (audioSource != null) audioSource.Stop();
-			hasPlayedAudio = false;
-		}
-
 		sprite.color = originalColor;
 
 		if (countdownText != null)
 		{
+			countdownText.color = Color.black;
 			int totalJoined = metaController.joinedPlayers.Count;
-			if (totalJoined > 1 && playersOnPad < totalJoined)
-				countdownText.text = "WAITING FOR OTHERS...";
+
+			// If at least 2 people have joined, show the fraction
+			if (totalJoined > 1)
+			{
+				countdownText.text = $"WAITING FOR {playersOnPad}/{totalJoined} PLAYERS";
+			}
 			else
+			{
+				// If only 1 or 0 people have joined the game session
 				countdownText.text = "DRIVE HERE TO START";
+			}
+
 			countdownText.transform.localScale = Vector3.one;
 		}
 	}

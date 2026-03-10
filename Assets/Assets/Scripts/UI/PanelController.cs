@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PanelController : MonoBehaviour
 {
 	[SerializeField] private GameObject panelToToggle;
+	[SerializeField] private GameObject startPanel;
 	private bool isPaused = false;
 	private bool wasPressedLastFrame = false;
 
@@ -42,7 +43,8 @@ public class PanelController : MonoBehaviour
 	void ToggleMenu()
 	{
 		isPaused = !panelToToggle.activeSelf;
-		panelToToggle.SetActive(isPaused);
+		panelToToggle.SetActive(isPaused);	
+		startPanel.SetActive(!isPaused);
 		Time.timeScale = isPaused ? 0f : 1f;
 
 		foreach (GameObject player in MetaController.Instance.joinedPlayers)
