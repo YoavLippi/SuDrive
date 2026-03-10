@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class GameController : MonoBehaviour
 {
@@ -22,6 +23,14 @@ public class GameController : MonoBehaviour
 
 	[Header("Round Tracking")]
 	[SerializeField] private int currentRound = 1;
+
+	[Header("Scoreboard UI")]
+	[SerializeField] private List<TMPro.TextMeshProUGUI> playerTallyTexts;
+
+	[Header("End Screen UI Assets")]
+	[SerializeField] private List<Sprite> carFrontViews;
+	[SerializeField] private List<WinScreenSlot> endScreenSlots;
+	public GameObject winPanel;
 
 	[Header("Audio")]
 	public AudioSource audioSource;
@@ -43,8 +52,17 @@ public class GameController : MonoBehaviour
 	{
 		public GameObject playerObj;
 		public PlayerController playerController;
+		public Sprite frontViewImage;
 		public int score;
 		public bool isDead;
+	}
+
+	[Serializable]
+	public struct WinScreenSlot
+	{
+		public GameObject slotParent;   // The "Row" or "Box" in the UI
+		public UnityEngine.UI.Image carIcon;      // The Image component for the front-view
+		public TMPro.TextMeshProUGUI scoreText;   // The Text component for the points
 	}
 
 	void Start()
@@ -118,6 +136,12 @@ public class GameController : MonoBehaviour
 			temp.playerObj.GetComponent<CarController>().ResetActions();
 			temp.isDead = false;
 			temp.score = 0;
+
+			if (i < carFrontViews.Count)
+			{
+				temp.frontViewImage = carFrontViews[i];
+			}
+
 			playersArr.Add(temp);
 		}
 		
@@ -127,6 +151,8 @@ public class GameController : MonoBehaviour
 			playersArr[i].playerObj.transform.position = spawnPointParents[correspondingIndex].GetChild(i).position;
 			playersArr[i].playerObj.transform.rotation = spawnPointParents[correspondingIndex].GetChild(i).rotation;
 		}
+
+		UpdateScoreboard();
 	}
 
 	public void StartRound()
@@ -217,6 +243,8 @@ public class GameController : MonoBehaviour
 					temp.score++;
 					playersArr[i] = temp;
 
+					UpdateScoreboard();
+
 					if (temp.score == requiredRoundWins)
 					{
 						Win.Invoke(playersArr[i]);
@@ -245,5 +273,53 @@ public class GameController : MonoBehaviour
 	{
 		Debug.Log($"{winner.playerObj.name} is the winner");
 		//TODO: boot to main menu or go to win scene
+
+		if (winPanel != null) winPanel.SetActive(true);
+		Time.timeScale = 0f;
+
+		for (int i = 0; i < endScreenSlots.Count; i++)
+		{
+			if (i < playersArr.Count)
+			{
+				endScreenSlots[i].slotParent.SetActive(true);
+
+				// Using the front view images of the car
+				if (playersArr[i].frontViewImage != null)
+				{
+					endScreenSlots[i].carIcon.sprite = playersArr[i].frontViewImage;
+				}
+
+				endScreenSlots[i].scoreText.text = "SCORE: " + playersArr[i].score;
+
+				// Highlight Winner
+				endScreenSlots[i].scoreText.color = (playersArr[i].playerObj == winner.playerObj) ? Color.yellow : Color.white;
+			}
+			else
+			{
+				endScreenSlots[i].slotParent.SetActive(false);
+			}
+		}
+	}
+
+	public void UpdateScoreboard()
+	{
+		// Loop through our tracked players and update their specific text
+		for (int i = 0; i < playersArr.Count; i++)
+		{
+			if (i < playerTallyTexts.Count)
+			{
+				// Set the text to "Player [Number]: [Score]"
+				// We use (i + 1) because the list index starts at 0
+				playerTallyTexts[i].text = "Player " + (i + 1) + ": " + playersArr[i].score.ToString();
+
+				playerTallyTexts[i].gameObject.SetActive(true);
+			}
+		}
+
+		// Hide the slots for players who aren't in the match
+		for (int i = playersArr.Count; i < playerTallyTexts.Count; i++)
+		{
+			playerTallyTexts[i].gameObject.SetActive(false);
+		}
 	}
 }
