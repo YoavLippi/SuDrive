@@ -10589,6 +10589,18 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 08fcd7d1-8c0c-43bb-94db-28ad72a58fc0
     m_ActionName: 'UI/ToggleInfo[/Keyboard/i,/XInputControllerWindows/buttonNorth]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 37fd983e-6dbb-44c4-97a6-a85aea22fff6
+    m_ActionName: 'Player/Quit[/XInputControllerWindows/rightStickPress,/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4bb69638-5b86-41d9-93a9-2fb6ec6e019c
+    m_ActionName: 'UI/Quit[/XInputControllerWindows/rightStickPress,/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 523d7f8b-b768-4447-8639-dcf940f9de1e
+    m_ActionName: 'Quit/Quit[/XInputControllerWindows/rightStickPress,/Keyboard/escape]'
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

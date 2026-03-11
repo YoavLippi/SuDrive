@@ -63,6 +63,7 @@ public class GameController : MonoBehaviour
 		public GameObject slotParent;   // The "Row" or "Box" in the UI
 		public UnityEngine.UI.Image carIcon;      // The Image component for the front-view
 		public TMPro.TextMeshProUGUI scoreText;   // The Text component for the points
+		public TMPro.TextMeshProUGUI position;
 	}
 
 	void Start()

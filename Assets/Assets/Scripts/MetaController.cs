@@ -48,4 +48,5 @@ public class MetaController : MonoBehaviour
 		Destroy(playerInput.gameObject);
 		Debug.Log($"Device removed: {playerInput.GetDevice<InputDevice>()}");
 	}
+    
 }
