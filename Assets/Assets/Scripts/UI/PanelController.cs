@@ -9,7 +9,6 @@ public class PanelController : MonoBehaviour
 
 	
 	[SerializeField] private InputActionAsset inputActions;
-	private InputAction _quitAction;
 
 	void Update()
 	{
@@ -40,12 +39,12 @@ public class PanelController : MonoBehaviour
 			ToggleMenu();
 		}
 
-		wasPressedLastFrame = isAnyButtonPressed;
+		//wasPressedLastFrame = isAnyButtonPressed;
 
-		if (_quitAction.WasPressedThisFrame())
-		{
-			DoQuit();
-		}
+		//if (_quitAction.WasPressedThisFrame())
+		//{
+		//	DoQuit();
+		//}
 	}
 
 	void ToggleMenu()
@@ -79,31 +78,31 @@ public class PanelController : MonoBehaviour
 	}
 
 
-	private void Awake()
-	{
-		// Replace "Player" with your Map name and "Quit" with your Action name
-		_quitAction = inputActions.FindActionMap("Player").FindAction("Quit");
-	}
+//	private void Awake()
+//	{
+//		// Replace "Player" with your Map name and "Quit" with your Action name
+//		_quitAction = inputActions.FindActionMap("Player").FindAction("Quit");
+//	}
 
-	private void OnEnable()
-	{
-		_quitAction.Enable();
-	}
+//	private void OnEnable()
+//	{
+//		_quitAction.Enable();
+//	}
 
-	private void OnDisable()
-	{
-		_quitAction.Disable();
-	}
+//	private void OnDisable()
+//	{
+//		_quitAction.Disable();
+//	}
 
 
-	private void DoQuit()
-	{
-		Debug.Log("Quit command received!");
+//	private void DoQuit()
+//	{
+//		Debug.Log("Quit command received!");
 
-#if UNITY_EDITOR
-		UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
-	}
+//#if UNITY_EDITOR
+//		UnityEditor.EditorApplication.isPlaying = false;
+//#else
+//            Application.Quit();
+//#endif
+//	}
 }

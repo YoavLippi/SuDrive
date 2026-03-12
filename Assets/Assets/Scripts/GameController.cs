@@ -34,25 +34,28 @@ public class GameController : MonoBehaviour
 	[SerializeField] private List<WinScreenSlot> endScreenSlots;
 	public GameObject winPanel;
 
+	[Header("End Screen Timer")]
+	[SerializeField] private TextMeshProUGUI timerText; // Drag your UI text here
+	[SerializeField] private float restartDelay = 10f;
+
 	[Header("Input")]
 	[SerializeField] private InputActionAsset inputActions;
-	private InputAction _restartAction;
 
 	[Header("Audio")]
 	public AudioSource audioSource;
 	public AudioClip beepSound;
 
 	[SerializeField] private List<GameObject> playerObjArr;
-	
-  [Header("Death Animation")]
-  public DeathAnim deathAnim;
-    
+
+	[Header("Death Animation")]
+	public DeathAnim deathAnim;
+
 	private float countdownDuration = 3f;
 	private bool hasPlayedAudio = false;
 	public UnityEvent<TrackedPlayer> Win;
 	public UnityEvent roundStart;
 	public UnityEvent roundEnd;
-	
+
 	[Serializable]
 	public struct TrackedPlayer
 	{
@@ -69,27 +72,10 @@ public class GameController : MonoBehaviour
 		public GameObject slotParent;   // The "Row" or "Box" in the UI
 		public UnityEngine.UI.Image carIcon;      // The Image component for the front-view
 		public TMPro.TextMeshProUGUI scoreText;   // The Text component for the points
-		public TMPro.TextMeshProUGUI position;
+																							//public TMPro.TextMeshProUGUI position;
 	}
 
-	void Awake()
-	{
-		if (inputActions != null)
-		{
-			// Use the "MapName/ActionName" format. 
-			// Example: "Player/Restart"
-			_restartAction = inputActions.FindAction("Player/Restart");
-
-			if (_restartAction == null)
-			{
-				Debug.LogError("Could not find the Restart action! Check your names.");
-			}
-		}
-		else
-		{
-			Debug.LogError("Input Action Asset is missing from the Inspector!");
-		}
-	}
+	
 
 	void Start()
 	{
@@ -100,27 +86,11 @@ public class GameController : MonoBehaviour
 		StartCoroutine(NextRound());
 	}
 
-	void OnEnable() => _restartAction?.Enable();
-	void OnDisable() => _restartAction?.Disable();
+	
 
 	void Update()
 	{
-		// Logic: ONLY allow restart if the win panel is currently active
-		if (winPanel != null && winPanel.activeInHierarchy)
-		{
-			// LOG 2: Does the script see the action?
-			if (_restartAction == null)
-			{
-				Debug.LogWarning("RESTART ACTION IS NULL!");
-				return;
-			}
-
-			if (_restartAction.WasPressedThisFrame())
-			{
-				Debug.Log("BUTTON PRESSED! Restarting...");
-				RestartToStart();
-			}
-		}
+		
 	}
 
 	private IEnumerator CountdownRoutine()
@@ -175,7 +145,7 @@ public class GameController : MonoBehaviour
 	{
 		playerObjArr = new List<GameObject>(MetaController.Instance.joinedPlayers);
 		deadPlayers = 0;
-		
+
 		for (int i = 0; i < playerObjArr.Count; i++)
 		{
 			TrackedPlayer temp = new TrackedPlayer();
@@ -193,7 +163,7 @@ public class GameController : MonoBehaviour
 
 			playersArr.Add(temp);
 		}
-		
+
 		int correspondingIndex = playersArr.Count - 1;
 		for (int i = 0; i < playersArr.Count; i++)
 		{
@@ -223,7 +193,7 @@ public class GameController : MonoBehaviour
 					playersArr[j].playerObj.GetComponent<CarController>().CurrentState = CarController.CarStates.Actionable;
 					playersArr[j].playerObj.GetComponent<CarController>().ResetActions();
 					playersArr[j].playerController.ClearAnim();
-	
+
 					var tempT = playersArr[j];
 					tempT.isDead = false;
 					tempT.playerObj.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
@@ -241,7 +211,7 @@ public class GameController : MonoBehaviour
 			temp.playerController = playerObjArr[i].GetComponent<PlayerController>();
 			temp.playerController.ClearAnim();
 			temp.playerObj.GetComponent<CarController>().ResetActions();
-			
+
 			temp.isDead = false;
 			temp.score = 0;
 			playersArr.Add(temp);
@@ -321,51 +291,98 @@ public class GameController : MonoBehaviour
 	public void DoWin(TrackedPlayer winner)
 	{
 		Time.timeScale = 0f;
-    winPanel.SetActive(true);
+		winPanel.SetActive(true);
 
-    // 2. Create a copy of the player list to sort (so we don't mess up original indices)
-    List<TrackedPlayer> sortedPlayers = new List<TrackedPlayer>(playersArr);
+		// 2. Create a copy of the player list to sort (so we don't mess up original indices)
+		List<TrackedPlayer> sortedPlayers = new List<TrackedPlayer>(playersArr);
 
-    // 3. Sort: Highest score first (b compared to a)
-    sortedPlayers.Sort((a, b) => b.score.CompareTo(a.score));
+		// 3. Sort: Highest score first (b compared to a)
+		sortedPlayers.Sort((a, b) => b.score.CompareTo(a.score));
 
-    // 4. Set the Title for the actual winner
-    // We find the winner's index in the ORIGINAL list to know if they were P1, P2, etc.
-    int winnerOriginalNum = playersArr.IndexOf(winner) + 1;
-    //winnerTitle.text = $"PLAYER {winnerOriginalNum} IS THE CHAMPION!";
+		// 4. Set the Title for the actual winner
+		// We find the winner's index in the ORIGINAL list to know if they were P1, P2, etc.
+		int winnerOriginalNum = playersArr.IndexOf(winner) + 1;
+		//winnerTitle.text = $"PLAYER {winnerOriginalNum} IS THE CHAMPION!";
 
-    // 5. Populate the slots in ranked order
-    for (int i = 0; i < endScreenSlots.Count; i++)
-    {
-        if (i < sortedPlayers.Count)
-        {
-            endScreenSlots[i].slotParent.SetActive(true);
-            
-            // Display the rank (1st, 2nd, etc.) based on the slot index
-            //string rankLabel = (i + 1) switch { 1 => "1st", 2 => "2nd", 3 => "3rd", _ => "4th" };
+		// 5. Populate the slots in ranked order
+		for (int i = 0; i < endScreenSlots.Count; i++)
+		{
+			if (i < sortedPlayers.Count)
+			{
+				endScreenSlots[i].slotParent.SetActive(true);
 
-            // Apply the image and score from the sorted list
-            endScreenSlots[i].carIcon.sprite = sortedPlayers[i].frontViewImage;
-            endScreenSlots[i].scoreText.text = $"Score: {sortedPlayers[i].score}";
+				// Display the rank (1st, 2nd, etc.) based on the slot index
+				//string rankLabel = (i + 1) switch { 1 => "1st", 2 => "2nd", 3 => "3rd", _ => "4th" };
 
-            // Highlight the absolute winner (highest score) in Gold/Yellow
-            if (i == 0)
-                endScreenSlots[i].scoreText.color = Color.yellow;
-            else
-                endScreenSlots[i].scoreText.color = Color.white;
-        }
-        else
-        {
-            // Hide slots if there are fewer than 4 players
-            endScreenSlots[i].slotParent.SetActive(false);
-        }
-    }
+				// Apply the image and score from the sorted list
+				endScreenSlots[i].carIcon.sprite = sortedPlayers[i].frontViewImage;
+				endScreenSlots[i].scoreText.text = $"Score: {sortedPlayers[i].score}";
+
+				// Highlight the absolute winner (highest score) in Gold/Yellow
+				if (i == 0)
+					endScreenSlots[i].scoreText.color = Color.yellow;
+				else
+					endScreenSlots[i].scoreText.color = Color.white;
+			}
+			else
+			{
+				// Hide slots if there are fewer than 4 players
+				endScreenSlots[i].slotParent.SetActive(false);
+			}
+		}
+
+		StartCoroutine(TimedRestartRoutine());
+	}
+
+	private IEnumerator TimedRestartRoutine()
+	{
+
+		float timeLeft = restartDelay;
+
+		while (timeLeft > 0)
+		{
+			// Update the UI text
+			if (timerText != null)
+			{
+				// "f0" formats the number to 0 decimal places (e.g., 10, 9, 8...)
+				timerText.text = "Returning to menu in: " + timeLeft.ToString("f0") + "s";
+			}
+
+			// Wait for 1 real-world second (ignoring the pause)
+			yield return new WaitForSecondsRealtime(1f);
+
+			// Reduce the timer
+			timeLeft -= 1f;
+
+			if (timeLeft <= 3f && timerText != null)
+			{
+				timerText.color = Color.red;
+				// You could also trigger a "beep" sound here
+			}
+		}
+
+		// Ensure it shows 0 before switching
+		if (timerText != null) timerText.text = "Returning to menu in: 0s";
+
+		Debug.Log("Countdown finished. Restarting...");
+		RestartToStart();
 	}
 
 	public void RestartToStart()
 	{
 		// CRITICAL: Reset time scale or the next scene will be frozen!
 		Time.timeScale = 1f;
+		foreach (var player in playersArr)
+		{
+			if (player.playerObj != null) Destroy(player.playerObj);
+		}
+
+		// 3. Clear the MetaController list
+		if (MetaController.Instance != null)
+		{
+			// Using the method we created earlier to wipe the joinedPlayers list
+			MetaController.Instance.ResetForNewGame();
+		}
 		SceneManager.LoadScene("UI testing"); // Change to your actual scene name
 	}
 
