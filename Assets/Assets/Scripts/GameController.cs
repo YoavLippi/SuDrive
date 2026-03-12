@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class GameController : MonoBehaviour
@@ -32,14 +34,18 @@ public class GameController : MonoBehaviour
 	[SerializeField] private List<WinScreenSlot> endScreenSlots;
 	public GameObject winPanel;
 
+	[Header("Input")]
+	[SerializeField] private InputActionAsset inputActions;
+	private InputAction _restartAction;
+
 	[Header("Audio")]
 	public AudioSource audioSource;
 	public AudioClip beepSound;
 
 	[SerializeField] private List<GameObject> playerObjArr;
 	
-    [Header("Death Animation")]
-    public DeathAnim deathAnim;
+  [Header("Death Animation")]
+  public DeathAnim deathAnim;
     
 	private float countdownDuration = 3f;
 	private bool hasPlayedAudio = false;
@@ -66,6 +72,25 @@ public class GameController : MonoBehaviour
 		public TMPro.TextMeshProUGUI position;
 	}
 
+	void Awake()
+	{
+		if (inputActions != null)
+		{
+			// Use the "MapName/ActionName" format. 
+			// Example: "Player/Restart"
+			_restartAction = inputActions.FindAction("Player/Restart");
+
+			if (_restartAction == null)
+			{
+				Debug.LogError("Could not find the Restart action! Check your names.");
+			}
+		}
+		else
+		{
+			Debug.LogError("Input Action Asset is missing from the Inspector!");
+		}
+	}
+
 	void Start()
 	{
 		deadPlayers = 0;
@@ -73,6 +98,29 @@ public class GameController : MonoBehaviour
 		playersArr = new List<TrackedPlayer>();
 		InitializePlayers();
 		StartCoroutine(NextRound());
+	}
+
+	void OnEnable() => _restartAction?.Enable();
+	void OnDisable() => _restartAction?.Disable();
+
+	void Update()
+	{
+		// Logic: ONLY allow restart if the win panel is currently active
+		if (winPanel != null && winPanel.activeInHierarchy)
+		{
+			// LOG 2: Does the script see the action?
+			if (_restartAction == null)
+			{
+				Debug.LogWarning("RESTART ACTION IS NULL!");
+				return;
+			}
+
+			if (_restartAction.WasPressedThisFrame())
+			{
+				Debug.Log("BUTTON PRESSED! Restarting...");
+				RestartToStart();
+			}
+		}
 	}
 
 	private IEnumerator CountdownRoutine()
@@ -272,34 +320,53 @@ public class GameController : MonoBehaviour
 
 	public void DoWin(TrackedPlayer winner)
 	{
-		Debug.Log($"{winner.playerObj.name} is the winner");
-		//TODO: boot to main menu or go to win scene
-
-		if (winPanel != null) winPanel.SetActive(true);
 		Time.timeScale = 0f;
+    winPanel.SetActive(true);
 
-		for (int i = 0; i < endScreenSlots.Count; i++)
-		{
-			if (i < playersArr.Count)
-			{
-				endScreenSlots[i].slotParent.SetActive(true);
+    // 2. Create a copy of the player list to sort (so we don't mess up original indices)
+    List<TrackedPlayer> sortedPlayers = new List<TrackedPlayer>(playersArr);
 
-				// Using the front view images of the car
-				if (playersArr[i].frontViewImage != null)
-				{
-					endScreenSlots[i].carIcon.sprite = playersArr[i].frontViewImage;
-				}
+    // 3. Sort: Highest score first (b compared to a)
+    sortedPlayers.Sort((a, b) => b.score.CompareTo(a.score));
 
-				endScreenSlots[i].scoreText.text = "SCORE: " + playersArr[i].score;
+    // 4. Set the Title for the actual winner
+    // We find the winner's index in the ORIGINAL list to know if they were P1, P2, etc.
+    int winnerOriginalNum = playersArr.IndexOf(winner) + 1;
+    //winnerTitle.text = $"PLAYER {winnerOriginalNum} IS THE CHAMPION!";
 
-				// Highlight Winner
-				endScreenSlots[i].scoreText.color = (playersArr[i].playerObj == winner.playerObj) ? Color.yellow : Color.white;
-			}
-			else
-			{
-				endScreenSlots[i].slotParent.SetActive(false);
-			}
-		}
+    // 5. Populate the slots in ranked order
+    for (int i = 0; i < endScreenSlots.Count; i++)
+    {
+        if (i < sortedPlayers.Count)
+        {
+            endScreenSlots[i].slotParent.SetActive(true);
+            
+            // Display the rank (1st, 2nd, etc.) based on the slot index
+            //string rankLabel = (i + 1) switch { 1 => "1st", 2 => "2nd", 3 => "3rd", _ => "4th" };
+
+            // Apply the image and score from the sorted list
+            endScreenSlots[i].carIcon.sprite = sortedPlayers[i].frontViewImage;
+            endScreenSlots[i].scoreText.text = $"Score: {sortedPlayers[i].score}";
+
+            // Highlight the absolute winner (highest score) in Gold/Yellow
+            if (i == 0)
+                endScreenSlots[i].scoreText.color = Color.yellow;
+            else
+                endScreenSlots[i].scoreText.color = Color.white;
+        }
+        else
+        {
+            // Hide slots if there are fewer than 4 players
+            endScreenSlots[i].slotParent.SetActive(false);
+        }
+    }
+	}
+
+	public void RestartToStart()
+	{
+		// CRITICAL: Reset time scale or the next scene will be frozen!
+		Time.timeScale = 1f;
+		SceneManager.LoadScene("UI testing"); // Change to your actual scene name
 	}
 
 	public void UpdateScoreboard()

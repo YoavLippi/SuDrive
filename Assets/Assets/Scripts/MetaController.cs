@@ -48,5 +48,15 @@ public class MetaController : MonoBehaviour
 		Destroy(playerInput.gameObject);
 		Debug.Log($"Device removed: {playerInput.GetDevice<InputDevice>()}");
 	}
-    
+
+	public void ResetForNewGame()
+	{
+		// Clear the list of tracked player objects
+		joinedPlayers.Clear();
+
+		// If you have a 'player count' variable, reset it too
+		// playerCount = 0; 
+
+		Debug.Log("MetaController wiped. Ready for new players.");
+	}
 }

@@ -7,6 +7,10 @@ public class PanelController : MonoBehaviour
 	private bool isPaused = false;
 	private bool wasPressedLastFrame = false;
 
+	
+	[SerializeField] private InputActionAsset inputActions;
+	private InputAction _quitAction;
+
 	void Update()
 	{
 		// Use UnscaledTime or check every frame regardless of Time.timeScale
@@ -37,6 +41,11 @@ public class PanelController : MonoBehaviour
 		}
 
 		wasPressedLastFrame = isAnyButtonPressed;
+
+		if (_quitAction.WasPressedThisFrame())
+		{
+			DoQuit();
+		}
 	}
 
 	void ToggleMenu()
@@ -69,16 +78,32 @@ public class PanelController : MonoBehaviour
 		}
 	}
 
-	void OnQuit(InputAction.CallbackContext context)
+
+	private void Awake()
 	{
-		if (context.performed)
-		{
-			Debug.Log("Quitting...");
-			Application.Quit();
+		// Replace "Player" with your Map name and "Quit" with your Action name
+		_quitAction = inputActions.FindActionMap("Player").FindAction("Quit");
+	}
+
+	private void OnEnable()
+	{
+		_quitAction.Enable();
+	}
+
+	private void OnDisable()
+	{
+		_quitAction.Disable();
+	}
+
+
+	private void DoQuit()
+	{
+		Debug.Log("Quit command received!");
 
 #if UNITY_EDITOR
-			UnityEditor.EditorApplication.isPlaying = false;
+		UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
 #endif
-		}
-	}	
+	}
 }
