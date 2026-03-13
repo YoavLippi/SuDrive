@@ -127,7 +127,7 @@ public class GameController : MonoBehaviour
 		if (roundStartText != null) { roundStartText.text = "START!"; }
 
 		// Execute StartRound logic here to enable players
-		StartRound();
+		//StartRound();
 
 		// 5. Cleanup
 		yield return new WaitForSeconds(0.6f);

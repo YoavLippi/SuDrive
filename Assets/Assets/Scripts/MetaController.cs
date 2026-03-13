@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 [RequireComponent(typeof(PlayerInputManager))]
@@ -11,18 +12,31 @@ public class MetaController : MonoBehaviour
 	[SerializeField] private PlayerInputManager _manager;
 	[SerializeField] private Transform defaultSpawnPointParent;
 	public List<GameObject> joinedPlayers = new List<GameObject>();
+	
 	private void Awake()
 	{
 		if (Instance == null)
 		{
 			Instance = this;
 			DontDestroyOnLoad(gameObject);
+			SceneManager.sceneLoaded += onSceneLoaded;
 		}
 		else
 		{
 			Destroy(gameObject);
 		}
 	}
+
+	void onSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		Debug.Log("Loaded a new scene " + scene.name);
+		if(scene.name == "UI testing")
+		{
+			defaultSpawnPointParent = GameObject.Find("SpawnPointParent").transform;
+		}
+		
+	}
+
 
 	//Currently fills the place with empty gameObjects that can be tracked.
 	private void OnPlayerJoined(PlayerInput playerInput)
