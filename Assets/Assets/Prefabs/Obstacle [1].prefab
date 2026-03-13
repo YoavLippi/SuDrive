@@ -141,7 +141,7 @@ MonoBehaviour:
   obstacleType: 0
   neededSpeed: 5
   neededRotationSpeed: 10
-  bounciness: 3
+  bounciness: 7
   minBounceForce: 6
   bounceParticles: {fileID: 7244755661026013154, guid: 6a7fd6461c0151145bfb4a4112cd6097, type: 3}
   breakParticles: {fileID: 7244755661026013154, guid: 77fd92b2d3a9bfa4897ab3aed4a40c0c, type: 3}

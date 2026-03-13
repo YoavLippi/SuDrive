@@ -10595,11 +10595,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleHandler
   obstaclePrefabs:
   - {fileID: 8172348186466296239, guid: 65335556a1c9d8e4ea23b0d1b0cc25cd, type: 3}
-  spawnInterval: 2
+  spawnInterval: 3
   spawnIntervalSpacing: 0.5
   spawnAreaPoint: {x: 0, y: 0}
   spawnAreaOuter: {x: 55, y: 30}
-  spawnOnStart: 1
+  spawnOnStart: 0
   maxObstaclesSpawned: 10
   _timer: 2
   _nextSpawnTime: 6
@@ -18039,9 +18039,33 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 931426097}
+        m_TargetAssemblyTypeName: ObstacleHandler, Assembly-CSharp
+        m_MethodName: DoNewRound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   roundEnd:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 931426097}
+        m_TargetAssemblyTypeName: ObstacleHandler, Assembly-CSharp
+        m_MethodName: StopSpawning
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1833295797
 MonoBehaviour:
   m_ObjectHideFlags: 0

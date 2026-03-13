@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ObstacleHandler : MonoBehaviour
 {
@@ -16,6 +19,13 @@ public class ObstacleHandler : MonoBehaviour
     [SerializeField] float _timer;
     [SerializeField] float _nextSpawnTime;
 
+    private IEnumerator spawning;
+
+    private void Awake()
+    {
+        spawning = DoSpawns();
+    }
+
     void Start ()
     {
         if (obstaclePrefabs == null 
@@ -30,14 +40,6 @@ public class ObstacleHandler : MonoBehaviour
 
     private void Update()
     {
-        _timer += Time.deltaTime;
-
-        if (_timer >= _nextSpawnTime)
-        {
-            TrySpawn();
-            _timer = 0f;
-            _nextSpawnTime = GetNextInterval();
-        }
     }
 
     void TrySpawn ()
@@ -58,11 +60,45 @@ public class ObstacleHandler : MonoBehaviour
     float GetNextInterval ()
     {
         return spawnInterval + Random.Range(-spawnIntervalSpacing, spawnIntervalSpacing);
-
     }
 
-    public void StartSpawning() => enabled = true;
-    public void StopSpawning() => enabled = false;
+    private IEnumerator DoSpawns()
+    {
+        while (true)
+        {
+            yield return new WaitForEndOfFrame();
+            _timer += Time.deltaTime;
+
+            if (_timer >= _nextSpawnTime)
+            {
+                TrySpawn();
+                _timer = 0f;
+                _nextSpawnTime = GetNextInterval();
+            }
+        }
+    }
+
+    public void DoNewRound()
+    {
+        ClearChildren(transform);
+        StartCoroutine(spawning);
+    }
+
+    private void ClearChildren(Transform parent)
+    {
+        foreach (var child in parent.GetComponentsInChildren<Transform>())
+        {
+            if (child != parent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    public void StopSpawning()
+    {
+        StopCoroutine(spawning);
+    }
 
     private void OnDrawGizmosSelected()
     {
