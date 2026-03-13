@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections; 
 using TMPro;
 
 public class QuitZone : MonoBehaviour
@@ -8,11 +9,7 @@ public class QuitZone : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI statusText;
 
 	private List<GameObject> carsInZone = new List<GameObject>();
-
-	void Start()
-	{
-		UpdateStatusUI(); // Show the initial count (e.g., 0 / 2)
-	}
+	private Coroutine quitCoroutine; // To keep track of the countdown
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
@@ -29,6 +26,14 @@ public class QuitZone : MonoBehaviour
 		if (carsInZone.Contains(other.gameObject))
 		{
 			carsInZone.Remove(other.gameObject);
+
+			// If someone leaves, STOP the countdown
+			if (quitCoroutine != null)
+			{
+				StopCoroutine(quitCoroutine);
+				quitCoroutine = null;
+			}
+
 			UpdateStatusUI();
 		}
 	}
@@ -37,11 +42,10 @@ public class QuitZone : MonoBehaviour
 	{
 		int aliveCount = GetActivePlayerCount();
 
-		if (statusText != null)
+		if (statusText != null && quitCoroutine == null) // Don't overwrite the "Quitting in..." text
 		{
-			// Now it will correctly say "0 / 2" 
 			statusText.text = $"{carsInZone.Count} / {aliveCount} Players Ready";
-			//statusText.color = (carsInZone.Count >= aliveCount && aliveCount > 0) ? Color.green : Color.white;
+			statusText.color = (carsInZone.Count >= aliveCount && aliveCount > 0) ? Color.green : Color.black;
 		}
 	}
 
@@ -49,31 +53,43 @@ public class QuitZone : MonoBehaviour
 	{
 		int aliveCount = GetActivePlayerCount();
 
-		if (aliveCount > 0 && carsInZone.Count >= aliveCount)
+		// If everyone is in and we aren't already counting down
+		if (aliveCount > 0 && carsInZone.Count >= aliveCount && quitCoroutine == null)
 		{
-			ExecuteHardQuit();
+			quitCoroutine = StartCoroutine(QuitCountdownRoutine());
 		}
 	}
 
-	// Helper function to keep the code clean
-	private int GetActivePlayerCount()
+	private IEnumerator QuitCountdownRoutine()
 	{
-		
-			// If you are using the MetaController to track joined players:
-			if (MetaController.Instance != null)
+		float timer = 3f;
+
+		while (timer > 0)
+		{
+			if (statusText != null)
 			{
-				// This only counts players who actually joined the match
-				return MetaController.Instance.joinedPlayers.Count;
+				//Quitting in 3... 2... 1...
+				statusText.text = $"Quitting in {Mathf.Ceil(timer)}...";
+				statusText.color = Color.black;
 			}
 
-			// Fallback just in case
-			return GameObject.FindGameObjectsWithTag("Player").Length;
-		
+			yield return new WaitForSeconds(1f);
+			timer -= 1f;
+		}
+
+		ExecuteHardQuit();
+	}
+
+	private int GetActivePlayerCount()
+	{
+		if (MetaController.Instance != null)
+			return MetaController.Instance.joinedPlayers.Count;
+
+		return GameObject.FindGameObjectsWithTag("Player").Length;
 	}
 
 	private void ExecuteHardQuit()
 	{
-		Debug.Log("Game Exiting...");
 		Application.Quit();
 #if UNITY_EDITOR
 		UnityEditor.EditorApplication.isPlaying = false;

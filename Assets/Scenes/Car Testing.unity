@@ -17981,8 +17981,8 @@ MonoBehaviour:
   timerText: {fileID: 1317600812}
   restartDelay: 10
   inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  audioSource: {fileID: 0}
-  beepSound: {fileID: 0}
+  audioSource: {fileID: 1833295798}
+  beepSound: {fileID: 8300000, guid: a0836ef6ad29bc34f86a23f8efe67959, type: 3}
   playerObjArr: []
   deathAnim: {fileID: 0}
   Win:
