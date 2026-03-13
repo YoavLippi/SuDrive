@@ -339,7 +339,7 @@ public class GameController : MonoBehaviour
 			if (timerText != null)
 			{
 				// "f0" formats the number to 0 decimal places (e.g., 10, 9, 8...)
-				timerText.text = "Returning to menu in: " + timeLeft.ToString("") + "s";
+				timerText.text = Mathf.Ceil(timeLeft).ToString();
 			}
 
 			// Wait for 1 real-world second (ignoring the pause)
